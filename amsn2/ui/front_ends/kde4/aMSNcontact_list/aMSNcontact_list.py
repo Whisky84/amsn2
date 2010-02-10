@@ -18,7 +18,9 @@ class aMSNContactListWindow(base.aMSNContactListWindow):
     def __init__(self, amsn_core, parent):
         """Initialize the interface. You should store the reference to the core in here """
         print "NotImplementedError:\t\taMSNContactListWindow.__init__()"
-
+        self._core = amsn_core
+        self._clwidget = aMSNContactListWidget(self._core, self)
+    
     def show(self):
         """ Show the contact list window """
         print "NotImplementedError:\t\taMSNContactListWindow.show()"
@@ -49,7 +51,9 @@ class aMSNContactListWindow(base.aMSNContactListWindow):
 
     def get_contactlist_widget(self):
         """This will allow the core to access the widget"""
-        print "NotImplementedError:\t\taMSNContactListWindow.get_contactlist_widget()"
+        print "PartiallyImplementedError:\taMSNContactListWindow.get_contactlist_widget()"
+        return self._clwidget
+
 
 class aMSNContactListWidget(base.aMSNContactListWidget):
     """ This interface implements the contact list of the UI """

@@ -9,7 +9,6 @@ from PyKDE4.kdeui import *
 from PyKDE4.kdecore import *
 
 from PyQt4.QtCore import *
-from PyQt4.QtCore import SIGNAL
 import gobject
 
 
