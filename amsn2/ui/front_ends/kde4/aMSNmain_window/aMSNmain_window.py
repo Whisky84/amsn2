@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from amsn2.ui import base
+from amsn2.core.views import MenuItemView
 
 from PyKDE4.kdeui import *
 from PyKDE4.kdecore import *
@@ -45,15 +46,27 @@ class aMSNMainWindow(base.aMSNMainWindow, KMainWindow):
         
         
     def set_menu(self,menu):
-        print "NotImplementedError:\t\taMSNMainWindow.set_menu()"
-
+        print "PartiallyImplementedError:\taMSNMainWindow.set_menu()"
+        menu_bar = KMenuBar()
+        #FIXME: REFACTOR THIS **CRAP**
+        for i in menu.items:
+            if i.type == MenuItemView.CASCADE_MENU:
+                k_menu = menu_bar.addMenu(i.label)
+                for j in i.items:
+                    if j.label == "Log out":
+                        k_action = k_menu.addAction(j.label)
+                        QObject.connect(k_action, SIGNAL("triggered()"), self._core.sign_out_of_account)
+                    else:
+                        k_menu.addAction(j.label + " (!)")
+        menu_bar.addMenu(self.helpMenu())
+        self.setMenuBar(menu_bar)
 
 # -------------------- QT_OVERLOAD
 
     
     def closeEvent(self, event):
         print "\t\t\t\tmainwindow.closeEvent()"
-        self.core.quit()
+        self._core.quit()
         event.accept()
         
         
@@ -63,4 +76,4 @@ class aMSNMainWindow(base.aMSNMainWindow, KMainWindow):
         index = self.widget_stack.indexOf(widget)
         if index == -1:
             index = self.widget_stack.addWidget(widget)
-    self.widget_stack.setCurrentIndex(index) 
+        self.widget_stack.setCurrentIndex(index) 
