@@ -38,7 +38,7 @@ papyon_logger = logging.getLogger("papyon")
 logger = logging.getLogger("amsn2")
 
 class aMSNCore(object):
-    def __init__(self, options):
+    def __init__(self, options, extra = None):
         """
         Create a new aMSN Core. It takes an options class as argument
         which has a variable for each option the core is supposed to received.
@@ -47,8 +47,11 @@ class aMSNCore(object):
            options.account = the account's username to use
            options.password = the account's password to use
            options.front_end = the front end's name to use
-           options.debug = whether or not to enable debug output
+           options.debug_protocol = whether or not to enable protocol debug output
+           options.debug_amsn2 = whether or not to enable amsn2 debug output
+           options.auto_login = whether to autologin with the credentials given
         """
+        self.extra = extra
         self.p2s = {papyon.Presence.ONLINE:"online",
                     papyon.Presence.BUSY:"busy",
                     papyon.Presence.IDLE:"idle",
