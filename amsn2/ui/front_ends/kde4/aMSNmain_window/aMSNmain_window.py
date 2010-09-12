@@ -41,7 +41,7 @@ class aMSNMainWindow(base.aMSNMainWindow, KMainWindow):
         
 
     def set_title(self,title):
-        print "NWAE:\t\taMSNMainWindow.set_title()"
+        print "\t\t\t\taMSNMainWindow.set_title()"
         self.setPlainCaption(title)
         
         
@@ -65,7 +65,7 @@ class aMSNMainWindow(base.aMSNMainWindow, KMainWindow):
 
     
     def closeEvent(self, event):
-        print "\t\t\t\tmainwindow.closeEvent()"
+        print "\t\t\t\taMSNMainWindow.closeEvent()"
         self._core.quit()
         event.accept()
         

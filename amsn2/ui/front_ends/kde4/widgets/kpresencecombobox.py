@@ -30,6 +30,8 @@ class KPresenceComboBox(KComboBox):
         #p_key is of papyon.Presence type
         #p_value is a dumb string used by the core :P
         for p_key in self._core.p2s:
+            if p_key == papyon.Presence.OFFLINE:
+                continue
             p_value = self._core.p2s[p_key]
             _, icon_path = self._core._theme_manager.get_value("buddy_%s" % p_value)
             self.addItem(QIcon(icon_path), self.presence_strings[p_key], p_key)
@@ -47,9 +49,9 @@ class KPresenceComboBox(KComboBox):
             pass
         KComboBox.setCurrentIndex(self,  self.findData(presence))
         
-    def presence():
+    def presence(self):
         #we don't say "getPresence" to make it more Qt-Stylish
-        self.itemData( self.currentIndex() ).toPyObject()
+        return str(self.itemData( self.currentIndex() ).toPyObject())
         
         
     # -------------------- QT_OVERLOAD
@@ -57,3 +59,7 @@ class KPresenceComboBox(KComboBox):
     def setCurrentIndex(self, index):
         print "Oh, boy.... what an ugly way to set the displayed presence!"
         print "Come on, use setPresence() instead! :("
+        #the personalinfoview holds a string... so this is necessary...
+        #maybe this will be removed in the future... I hope...
+        KComboBox.setCurrentIndex(self, index)
+        

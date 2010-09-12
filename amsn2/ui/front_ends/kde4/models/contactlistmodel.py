@@ -5,6 +5,7 @@ from PyQt4.QtGui import *
 
 import sys
 
+
 class TreeItem(object):
     def __init__(self, data, parent = None):
         self.itemData = []
@@ -42,34 +43,22 @@ class TreeItem(object):
     
     def parent(self):
         return self.parentItem
+        
+        
+        
+        
     
+class ContactListModel(QAbstractItemModel):
     
-    
-    
-class TreeModel(QAbstractItemModel):
-    
-    def __init__(self, data, parent = None):
+    def __init__(self, parent = None):
         QAbstractItemModel.__init__(self, parent)
         rootData = []
         rootData.append("Title")
         rootData.append("Summary")
         self.rootItem  = TreeItem(rootData)
-        data = QString(data)
-        #self.setupModelData(data.split(QString("\n")), self.rootItem)
-        A = TreeItem(["A","a"],self.rootItem)
-        B = TreeItem("B",self.rootItem)
-        C = TreeItem("C",self.rootItem)
-        self.rootItem.appendChild(A)
-        self.rootItem.appendChild(B)
-        self.rootItem.appendChild(C)
-        print "A=", A
-        print "B=", B
-        print "C=", C
-        D = TreeItem("D",A)
-        A.appendChild(D)
         self.n = 0
         
-        
+    
     def index(self, row, column, parent):
         if not self.hasIndex(row, column, parent):
             return QModelIndex()
@@ -144,48 +133,13 @@ class TreeModel(QAbstractItemModel):
         return QVariant()
 
         
-    def setupModelData(self, lines, parent):
-        parents = []
-        indentations = []
-        parents.append(parent)
-        indentations.append(0)
-
-        number = 0
-
-        while number < lines.count():
-            position = 0;
-            while position < lines[number].length(): 
-                if lines[number].mid(position, 1) != " ":
-                    break
-                position+=1
-            
-
-            lineData = lines[number].mid(position).trimmed();
-
-            if not lineData.isEmpty():
-                #// Read the column data from the rest of the line.
-                columnStrings = lineData.split("\t", QString.SkipEmptyParts);
-                columnData = []
-                for column in range(0,column < columnStrings.count()):
-                    columnData.append(columnStrings[column])
-
-                if position > indentations.last():
-                    #// The last child of the current parent is now the new parent
-                    #// unless the current parent has no children.
-
-                    if parents.last().childCount() > 0:
-                        parents.append(parents.last().child(parents.last().childCount()-1))
-                        indentations.append(position)
-                
-                else:
-                    while position < indentations.last() and parents.count() > 0:
-                        parents.pop_back()
-                        indentations.pop_back()
-
-                        #// Append a new item to the current parent's list of children.
-                parents.last().appendChild(TreeItem(columnData, parents.last()))
-
-            number+=1
+    # amsn2 interface
+    
+    def contactlist_updated(self, clView):
+        pass
+        
+        
+        
             
 if __name__ == "__main__":
     qapp = QApplication(sys.argv)

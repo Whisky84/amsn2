@@ -80,9 +80,10 @@ class KLoginPage(QWidget):
         for a in accountviews:
             self.account_combo.addItem(a.email)
             self.account_combo_completion.addItem(a.email)
-        if accountviews[0]:
-            self.account_combo.setCurrentIndex(self.account_combo.findText(accountviews[0].email)) #shouldn't this be done by qslot_set_account?
-            self.qslot_set_account(self.account_combo.currentIndex())
+      
+        #if accountviews[0]:
+        #    self.account_combo.setCurrentIndex(self.account_combo.findText(accountviews[0].email)) #shouldn't this be done by qslot_set_account?
+        #    self.qslot_set_account(self.account_combo.currentIndex())
         
     
     # -------------------- QT_SLOTS
@@ -93,7 +94,7 @@ class KLoginPage(QWidget):
         if is_mail_valid(str(new_text)):
             self.is_account_valid = True
             if index > -1:
-                self.set_account_(index)
+                self.qslot_set_account(index)
             else:
                 self.clear_login_settings()
         else:
@@ -126,9 +127,9 @@ class KLoginPage(QWidget):
         
         
     def qslot_start_login(self):
-        accv = self.core._ui_manager.get_accountview_from_email(str(self.account_combo.currentText()))
+        accv = self._core._ui_manager.get_accountview_from_email(str(self.account_combo.currentText()))
         if accv is None:
-            accv = AccountView(self.core, str(self.account_combo.currentText()))
+            accv = AccountView(self._core, str(self.account_combo.currentText()))
 
         accv.password = str(self.password_edit.text())
         accv.presence = self.presence_combo.presence()
@@ -136,7 +137,7 @@ class KLoginPage(QWidget):
         accv.save_password = self.save_password.isChecked()
         accv.autologin = self.autologin.isChecked()
         
-        self.core.signin_to_account(self, accv)
+        self._core.signin_to_account(self.parent(), accv)
         
         
     # -------------------- OTHER_METHODS
@@ -144,7 +145,7 @@ class KLoginPage(QWidget):
     
     def clear_login_settings(self):
         self.password_edit.clear()
-        self.presence_combo.setCurrentIndex(self.presence_combo.findData(self.core.Presence.ONLINE))
+        self.presence_combo.setPresence(self._core.Presence.ONLINE)
         self.save_account.setChecked(False)
         self.save_password.setChecked(False)
         self.autologin.setChecked(False)
@@ -154,8 +155,10 @@ class KLoginPage(QWidget):
         if self.is_account_valid:
             validity = True
             if self.is_there_some_password:
+                self.save_password.setEnabled(True)
                 self.login_btn.setEnabled(True)
             else: 
+                self.save_password.setEnabled(False)
                 self.login_btn.setEnabled(False)
         else:
             validity = False
@@ -163,7 +166,7 @@ class KLoginPage(QWidget):
         self.password_edit.setEnabled(validity)
         self.presence_combo.setEnabled(validity)
         self.save_account.setEnabled(validity)
-        self.save_password.setEnabled(validity)
+        #self.save_password.setEnabled(validity)
         self.autologin.setEnabled(validity)
     
         

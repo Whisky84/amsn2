@@ -32,7 +32,7 @@ class KSigninInPage(QWidget):
     
     
     def show(self):
-        self.parent.setCurrentWidget(self)
+        self.parent.setCurrentWidget(self) #do we really need this?
         QWidget.show(self)
         
     
