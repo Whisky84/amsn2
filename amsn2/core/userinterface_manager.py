@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from views import *
+from amsn2.views import ImageView, AccountView
 
 import logging
 logger = logging.getLogger('amsn2.ui_manager')
@@ -30,7 +30,7 @@ class aMSNUserInterfaceManager(object):
         if self.frontend_exists(ui_name):
             self._ui = self.front_ends[ui_name].load()
 
-            self._loop = self._ui.aMSNMainLoop(self)
+            self._core._loop = self._ui.aMSNMainLoop(self)
             self._main = self._ui.aMSNMainWindow(self._core)
             self._core._main = self._main
             self._skin_manager = self._ui.SkinManager(self._core)
@@ -41,9 +41,6 @@ class aMSNUserInterfaceManager(object):
                          % (ui_name, str(self.list_frontends())))
             self._core.quit()
 
-    def get_loop(self):
-        return self._loop
-
     def load_splash(self):
         self._splash = self._ui.aMSNSplashScreen(self._core, self._main)
         image = ImageView()
@@ -52,7 +49,7 @@ class aMSNUserInterfaceManager(object):
         self._splash.image = image
         self._splash.text = "Loading..."
         self._splash.show()
-        self._main.title = "aMSN 2 - Loading"
+        self._main.set_title("aMSN 2 - Loading")
         return self._splash
 
     def load_login(self, accounts):
@@ -72,7 +69,7 @@ class aMSNUserInterfaceManager(object):
             self._login.signout()
             self._login.set_accounts(accounts)
 
-        self._main.title = "aMSN 2 - Login"
+        self._main.set_title("aMSN 2 - Login")
 
         self._login.show()
 
@@ -111,13 +108,19 @@ class aMSNUserInterfaceManager(object):
         self._contactlist = None
 
     def show_dialog(self, message, buttons):
-        self._ui.aMSNDialogWindow(message, buttons)
+        win = self._ui.aMSNDialogWindow(message, buttons)
+        win.set_title("aMSN 2 - Dialog")
+        win.show()
 
     def show_notification(self, message):
-        self._ui.aMSNNotificationWindow(message)
+        win = self._ui.aMSNNotificationWindow(message)
+        win.set_title("aMSN 2 - Notification")
+        win.show()
 
     def show_error(self, message):
-        self._ui.aMSNErrorWindow(message)
+        win = self._ui.aMSNErrorWindow(message)
+        win.set_title("aMSN 2 - Error")
+        win.show()
 
     def load_chat_window(self, conv_manager):
         return self._ui.aMSNChatWindow(conv_manager)
@@ -125,15 +128,30 @@ class aMSNUserInterfaceManager(object):
     def load_chat_widget(self, conversation, window, cuids):
         return self._ui.aMSNChatWidget(conversation, window, cuids)
 
-    def load_contact_input_window(self, callback):
-        return self._ui.aMSNContactInputWindow(('Contact to add: ', 'Invite message: '),
-                                                 callback, ())
+    def load_contact_input_window(self, callback, groupviews):
+        win = self._ui.aMSNContactInputWindow(('Contact to add: ', 'Invite message: '),
+                                                 callback, groupviews, "aMSN 2 - Add a Contact")
+        win.show()
+        return win
 
-    def load_contact_delete_window(self, callback):
-        return self._ui.aMSNContactDeleteWindow('Contact to remove: ', callback, ())
+    def load_contact_delete_window(self, callback, contactviews):
+        win = self._ui.aMSNContactDeleteWindow(('Contact to remove: ',), callback, contactviews, "aMSN 2 - Delete a Contact")
+        win.show()
+        return win
+
+    def load_group_input_window(self, callback, contactviews):
+        win = self._ui.aMSNGroupInputWindow(('Group to add: ',), callback, contactviews, "aMSN 2 - Add a Group")
+        win.show()
+        return win
+
+    def load_group_delete_window(self, callback, groupviews):
+        win = self._ui.aMSNGroupDeleteWindow(('Group to remove: ',), callback, groupviews, "aMSN 2 - Delete a Group")
+        win.show()
+        return win
 
     def load_DP_chooser_window(self):
-        self._ui.aMSNDPChooserWindow(self._core._account.set_dp ,self._core._backend_manager)
+        win = self._ui.aMSNDPChooserWindow(self._core._account.set_dp ,self._core._backend_manager, "aMSN 2 - Choose a Display Picture")
+        win.show()
 
     # Common methods for all UI
 

@@ -1,5 +1,6 @@
+from window import aMSNWindow
 
-class aMSNChatWindow(object):
+class aMSNChatWindow(aMSNWindow):
     """ This interface will represent a chat window of the UI
         It can have many aMSNChatWidgets"""
     def __init__(self, amsn_core):
@@ -26,5 +27,8 @@ class aMSNChatWidget(object):
         raise NotImplementedError
 
     def nudge(self):
+        raise NotImplementedError
+
+    def on_user_typing(self, contact):
         raise NotImplementedError
 

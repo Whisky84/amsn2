@@ -1,6 +1,6 @@
 
 import os
-from amsn2.core.views import AccountView
+from amsn2.views import AccountView
 import basebackend
 
 """ElementTree independent from the available distribution"""
@@ -99,9 +99,12 @@ class defaultaccountbackend(basebackend.basebackend):
             break
         accountviews = []
         for account_dir in account_dirs:
-            accv = self.load_account(os.path.join(self.accounts_dir, account_dir))
-            if accv:
-                accountviews.append(accv)
+            try:
+                accv = self.load_account(os.path.join(self.accounts_dir, account_dir))
+                if accv:
+                    accountviews.append(accv)
+            except:
+                pass
         return accountviews
 
     def create_account_file_tree(self, email):
