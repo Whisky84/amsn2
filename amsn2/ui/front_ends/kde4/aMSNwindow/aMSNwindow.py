@@ -2,22 +2,26 @@
 
 from amsn2.ui import base
 
-class aMSNWindow(base.aMSNWindow):
+from PyQt4.QtGui import QWidget
+
+class aMSNWindow(base.aMSNWindow, QWidget):
     """ This Interface represents a window of the application. Everything will be done from here """
     def __init__(self, amsn_core):
         """
         @type amsn_core: aMSNCore
         """
-
-        print "NotImplementedError:\t\taMSNWindow.__init__()"
+        print "\t\t\t\taMSNWindow.__init__()"
+        QWidget.__init__(self, None)
 
     def show(self):
         """ This launches the window, creates it, etc.."""
-        print "NotImplementedError:\t\taMSNWindow.show()"
+        print "\t\t\t\taMSNWindow.show()"
+        QWidget.show(self)
 
     def hide(self):
         """ This should hide the window"""
-        print "NotImplementedError:\t\taMSNWindow.hide()"
+        print "\t\t\t\taMSNWindow.hide()"
+        QWidget.hide(self)
 
     def set_title(self, text):
         """

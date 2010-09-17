@@ -13,9 +13,9 @@ class ContactListModel(QAbstractListModel):
 
     def __init__(self, parent = None):
         QAbstractTableModel.__init__(self, parent)
+        self._parent = parent
         self.contactList = []
         self.groupDict = {}
-
 
 
     def rowCount(self, parent):
@@ -27,27 +27,33 @@ class ContactListModel(QAbstractListModel):
             return len(self.contactList)
             
 
-    #def columnCount(self, parent):
-        #if parent.isValid():
-            #return 0
-        #else:
-            #return 3
+    def columnCount(self, parent):
+        if parent.isValid():
+            return 0
+        else:
+            return 3
 
 
     def data(self, index, role):
-        #print "\t\t\t\tContactListModel.data: (" + str(index.row()) + "," + str(index.column()) + "), Role:  " + str(role) 
-        if role == Qt.DisplayRole:
-            if index.column() != 0:
-                return QVariant()
-            else:
-                #print u"\t\t\t\t\tdata(): ("+str(index.row())+","+str(index.column())+") -> " + self.contactList[index.row()].name.to_HTML_string()
-                return QString(self.contactList[index.row()].name.to_HTML_string())
-        elif role == Qt.DecorationRole:
-            if index.column != 0:
-                return QVariant()
-            else:
-                return QPixmap(self.contactList[index.row()].dp)
+        #print "\t\t\t\tContactListModel.data: (" + str(index.row()) + "," + str(index.column()) + "), Role:  " + str(role)
+        if (not index.isValid()) or (index.column() != 0) :
+            return QVariant()
+        else:
 
+            if role == Qt.DisplayRole:
+                #print u"\t\t\t\t\tdata(): ("+str(index.row())+","+str(index.column())+") -> " + self.contactList[index.row()].name.to_HTML_string()
+                return QVariant(QString(self.contactList[index.row()].name.to_HTML_string()).replace("<i>","<br><i>"))
+
+            elif role == Qt.DecorationRole:
+                _,dpPath = self.contactList[index.row()].dp.imgs[0]
+                if dpPath == "dp_nopic":
+                    _,dpPath = self._parent._core._theme_manager.get_value("dp_nopic")
+                return QPixmap(dpPath)
+
+            else:
+                return QVariant()
+
+                
     # amsn2 interface
 
     def contactlist_updated(self, clView):
@@ -60,7 +66,7 @@ class ContactListModel(QAbstractListModel):
 
         @type contact: ContactView
         @param contact:the contact information."""
-        print "\t\t\t\tContactListModel.contact_updated()"
+        #print "\t\t\t\tContactListModel.contact_updated()"
         #print "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t(UID)"
         #print "\tDevo elaborare: " + str(contact.name.get_tag("nickname")) +  "\tUID:" + contact.uid
         #if contactList is empty add directly the contact and return:
@@ -99,9 +105,9 @@ class ContactListModel(QAbstractListModel):
         
 
     def group_updated(self, gView):
-        print "\t\t\t\tContactListModel.group_updated()"
+        #print "\t\t\t\tContactListModel.group_updated()"
         self.groupDict[gView.uid] = (gView.name, gView.contact_ids)
-        print "\t\t\t\t\tlen(self.groupDict) = " + str(len(self.groupDict))
+        #print "\t\t\t\t\tlen(self.groupDict) = " + str(len(self.groupDict))
 
 
 
@@ -154,21 +160,27 @@ class ContactDelegate (QItemDelegate):
         self.parent = parent
 
     def paint(self, painter, option, index):
-        print "\t\t\t\tContactDelegate.paint: index = (%d,%d); rect=(%d,%d,%d,%d)"  \
-                % (index.row(), index.column(), \
-                   option.rect.x(), option.rect.y(), option.rect.width(), option.rect.height())
+        #print "\t\t\t\tContactDelegate.paint: index = (%d,%d); rect=(%d,%d,%d,%d)"  \
+                #% (index.row(), index.column(), \
+                #   option.rect.x(), option.rect.y(), option.rect.width(), option.rect.height())
         if not index.isValid():
             return
 
         #painter must be saved before painting
         painter.save()
-        viewRect = self.parent.rect()
+        viewPos = self.parent.pos()
+        #print "\t\t\t\t\tparent: pos=(%d,%d)" \
+                #% (viewPos.x(), viewPos.y()),
+        #print "; geometry=(%d,%d)" % (self.parent.geometry().x(), self.parent.geometry().y()),
+        #print "(x,y) = (%d,%d)" % (self.parent.x(), self.parent.y())
+        #print "\t\t\t\t\tpainter: viewPort = (%d,%d)" % (painter.viewport().x(), painter.viewport().y()),
+        #print "; window=(%d,%d)" % (painter.window().x(), painter.window().y())
         #blocco copiato :)
         #painter.translate(0, 0)
         #options = QStyleOptionViewItemV4(option)
         #self.initStyleOption(options, index)
         painter.setRenderHint(QPainter.Antialiasing, True)
-        QApplication.style().drawControl(QStyle.CE_ItemViewItem, option, painter, option.widget)
+
 
         #painting has to be clipped in this delegate's rect
         painter.setClipRect(option.rect)
@@ -177,23 +189,34 @@ class ContactDelegate (QItemDelegate):
         #painting the display picture:
         option.decorationAlignment = Qt.AlignLeft
         option.decorationPosition = QStyleOptionViewItem.Left
-        #self.drawDecoration(painter, option, option.rect, QPixmap(index.model().data(index, Qt.DecorationRole)))
-        self.drawDecoration(painter, option, option.rect, QPixmap("/home/rayleigh/src/aMSN2/amsn2/themes/displaypic/default/male.png").scaled(50,50))
-        #The label's rendering need the rect to be shrinked (why..?)
-        #option.rect.setX(option.rect.x()+110)
-        datum = index.model().data(index, Qt.DisplayRole)
-        #print "\t\t\t\tContactDelegate.paint datum = %s" % (str(datum))
-        datum = datum.replace("<i>","<br><i>")
-        self.drawDisplay(painter, option, option.rect, datum)
-        #label = QLabel(str(datum))
-        #label.setBackgroundRole(QPalette.Base)
-        #labelOrigin = QPoint(option.rect.topLeft())
-        #labelOriginOffset = QPoint(viewRect.topLeft())
-        #labelOrigin.setY( labelOrigin.y() + option.rect.height()/2) #this centers the label vertically...
-        #label.render(painter, labelOrigin+labelOriginOffset)#, QRegion(), QWidget.RenderFlags(QWidget.IgnoreMask))
+        option.displayAlignment = Qt.AlignLeft
 
-        #this should draw the focus, but it doesn't work...
-        #self.drawFocus(painter, option, option.rect)
+        decorationRect = QRect( option.rect.x()+5, \
+                                option.rect.y() + 5, \
+                                option.rect.width(), \
+                                option.rect.height() ) 
+        #self.drawDecoration(painter, option, option.rect, QPixmap(index.model().data(index, Qt.DecorationRole)))
+        self.drawDecoration(painter, option, decorationRect, index.model().data(index, Qt.DecorationRole).scaled(50,50))
+        #The label's rendering need the rect to be shrinked (why..?)
+        #option.rect.setX(option.rect.x()+65)
+        datum = index.model().data(index, Qt.DisplayRole).toString()
+        #print "\t\t\t\tContactDelegate.paint datum = %s" % (str(datum))
+        #self.drawDisplay(painter, option, option.rect, datum)
+        label = QLabel(datum)
+        label.setBackgroundRole(QPalette.Base)
+        labelOrigin = QPoint(option.rect.topLeft())
+        labelOriginOffset = QPoint(viewPos)
+        labelOrigin.setY( labelOrigin.y() + option.rect.height()/3) #this centers the label vertically...
+        #label.render(painter, labelOrigin+labelOriginOffset)#, QRegion(), QWidget.RenderFlags(QWidget.IgnoreMask))
+        labelPixmap = QPixmap.grabWidget(label)
+        labelPixmapRect = QRect(option.rect.x()+65, \
+                                  option.rect.y()+(option.rect.height()-labelPixmap.size().height())/2, \
+                                  option.rect.width(), \
+                                  option.rect.height())
+        self.drawDecoration(painter, option, labelPixmapRect, labelPixmap)
+        
+        QApplication.style().drawControl(QStyle.CE_ItemViewItem, option, painter, option.widget)
+        
         painter.restore()
         
 
@@ -208,7 +231,7 @@ class ContactDelegate (QItemDelegate):
         #model = index.model()
         #qv = QPixmap(model.data(model.index(index.row(), 0, index.parent()), Qt.DecorationRole))
         #if qv.isNull():
-        size = QSize(500, 50)
+        size = QSize(200, 60)
         #else:
         #    size = QSize(doc.idealWidth(), qv.height() + 6)
 
@@ -226,7 +249,9 @@ class Test(KMainWindow):
         self.view.setModel(model)
         self.view.setItemDelegate(ContactDelegate(self.view))
         
-        lay = QHBoxLayout()
+        
+        lay = QVBoxLayout()
+        lay.addWidget(QLabel("Ciao"))
         lay.addWidget(self.view)
 
         w = QWidget()
@@ -246,20 +271,25 @@ class DummyModel(QAbstractListModel):
         else:
             return 4
 
+
     def data(self, index, role):
-        if role != Qt.DisplayRole:
+        if (not index.isValid()) or (index.column() != 0):
             return QVariant()
-        if index.column() != 0:
-            return QVariant()
-        elif index.row() == 0:
-            return QString("Ciao! <i>coglione</i>")
-        elif index.row() == 1:
-            return QString("Blah <i>blah</i>")
         else:
-            return QString("altro")
 
-        
+            if role == Qt.DisplayRole:
+                #print u"\t\t\t\t\tdata(): ("+str(index.row())+","+str(index.column())+") -> " + self.contactList[index.row()].name.to_HTML_string()
+                return QVariant(QString("Sono un contatto<br><i>di indici (%d,%d)</i>"%(index.row(),index.column())))
 
+            elif role == Qt.DecorationRole:
+                dpPath = "/home/fastfading/.amsn2/kde4fe_at_hotmail.com/displaypics/whisky.gabriele_at_gmail.com/4c61450adf0df29977729a033c036a3c9b3b5948.img"
+                return QPixmap(dpPath)
+
+            else:
+                return QVariant()
+
+
+    
 if __name__ == "__main__":
     about_data = KAboutData("a","b",ki18n("c"), "d")
     KCmdLineArgs.init(sys.argv, about_data)

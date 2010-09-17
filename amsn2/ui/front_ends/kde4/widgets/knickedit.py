@@ -57,6 +57,7 @@ class KNickEdit(QStackedWidget):
         
         QObject.connect(self.label, SIGNAL("clicked()"), self.qslotLabelClicked)
         QObject.connect(self.lineEdit, SIGNAL("editingFinished()"), self.qslotLineEdited)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         
         
     def text(self):

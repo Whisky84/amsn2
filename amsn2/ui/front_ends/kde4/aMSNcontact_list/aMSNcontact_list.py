@@ -9,7 +9,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 from amsn2.ui.front_ends.kde4.widgets import KPresenceComboBox, KNickEdit
-from amsn2.ui.front_ends.kde4.models import ContactListModel
+from amsn2.ui.front_ends.kde4.models import ContactListModel, ContactDelegate
 
 
 """TODO:
@@ -101,7 +101,7 @@ class aMSNContactListWindow(base.aMSNContactListWindow, QWidget):
         self.nick.setText(view.nick.to_HTML_string())
         if not QString(str(view.psm)).isEmpty(): #Think carefully: i think we can remove this if (look at KPresenceComboBox.setText()'s implementation)
             self.psm.setText(view.psm.to_HTML_string())
-        print "N. of personal Images:" + str(len(view.dp.imgs))
+        print "\t\t\t\t\tN. of personal Images:" + str(len(view.dp.imgs))
         if len(view.dp.imgs) > 0:
             print "WE HAVE A DP FROM THE CORE! UPDATE THE FRONT END CODE!!"
         self.current_media.setText(view.current_media.to_HTML_string())
@@ -117,15 +117,19 @@ class aMSNContactListWindow(base.aMSNContactListWindow, QWidget):
 
 
 
-class aMSNContactListWidget(base.aMSNContactListWidget, QTreeView):
+class aMSNContactListWidget(base.aMSNContactListWidget, QListView):
     """ This interface implements the contact list of the UI """
     def __init__(self, amsn_core, parent):
         """Initialize the interface. You should store the reference to the core in here """
         print "PartiallyImplementedError:\taMSNContactListWidget.__init__()"
         self._core = amsn_core
-        QTreeView.__init__(self, parent)
-        self.cl_model = ContactListModel()
+        QListView.__init__(self, parent)
+
+        self.cl_model = ContactListModel(self)
         self.setModel(self.cl_model)
+        self.setItemDelegate(ContactDelegate(self))
+        
+        QObject.connect(self,SIGNAL("doubleClicked(const QModelIndex&)"),self.qslotItemDoubleClicked)
         
 
     def show(self):
@@ -137,6 +141,17 @@ class aMSNContactListWidget(base.aMSNContactListWidget, QTreeView):
     def hide(self):
         """ Hide the contact list widget """
         print "NotImplementedError:\t\taMSNContactListWidget.hide()"
+        
+    
+    #doesn't work as expected (expected by me, of course :) )
+    #def dataChanged(self, topLeft,  bottomRight):
+        #print "\t\t\t\taMSNContactListWidget.dataChanged()"
+        #for i in range(topLeft.row(),  bottomRight.row()+1):
+            #for j in range(topLeft.column(), bottomRight.column()+1):
+                #index = QModelIndex(i, j)
+                #label = QLabel(self.cl_model.data(index, Qt.DisplayRole))
+                #label.setPixmap(self.cl_model.data(index, Qt.DecorationRole))
+                #self.setIndexWidget(index, QPushButton(self.cl_model.data(index, Qt.DisplayRole)).show())
         
 
     def contactlist_updated(self, clView):
@@ -151,7 +166,7 @@ class aMSNContactListWidget(base.aMSNContactListWidget, QTreeView):
         @param clView : contains the list of groups contained in
         the contact list which will contain the list of ContactViews
         for all the contacts to show in the group."""
-        print "NotImplementedError:\t\taMSNContactListWidget.contactlist_updated()"
+        print "\t\t\t\taMSNContactListWidget.contactlist_updated()"
         self.cl_model.contactlist_updated(clView)
         
 
@@ -163,8 +178,8 @@ class aMSNContactListWidget(base.aMSNContactListWidget, QTreeView):
         may be changed, in which case the UI should update itself accordingly.
         A contact can also be added or removed from a group using this method
         """
-        print "NotImplementedError:\t\taMSNContactListWidget.group_updated()"
-        print groupView
+        #print "\t\t\t\taMSNContactListWidget.group_updated()"
+        self.cl_model.group_updated(groupView)
         
 
     def contact_updated(self, contactView):
@@ -177,6 +192,11 @@ class aMSNContactListWidget(base.aMSNContactListWidget, QTreeView):
         call will be made with the new order of the contacts
         in the affects groups.
         """
-        print "NotImplementedError:\t\taMSNContactListWidget.contact_updated()"
-        print contactView
-        
+        #print "\t\t\t\taMSNContactListWidget.contact_updated()"
+        self.cl_model.contact_updated(contactView)
+
+    # -------------------- QT_SLOTS
+
+    def qslotItemDoubleClicked(self, item):
+        print str(item.row())
+        self._core._conversation_manager.new_conversation([self.cl_model.contactList[item.row()].uid])

@@ -56,7 +56,7 @@ class aMSNLoginWindow(base.aMSNLoginWindow, QStackedWidget):
         self.login_page.set_accounts(accountviews)
         
 
-    def signin(self):
+    def signing_in(self):
         """ This method will be called when the core needs the login window to start the signin process.
         This is intended only to change the look of the login window. """
         print "\t\t\t\taMSNLoginWindow.signin()"

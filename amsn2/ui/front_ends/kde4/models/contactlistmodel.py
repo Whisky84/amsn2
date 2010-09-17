@@ -136,7 +136,7 @@ class ContactListModel(QAbstractItemModel):
     # amsn2 interface
     
     def contactlist_updated(self, clView):
-        pass
+        print clView
         
         
         
