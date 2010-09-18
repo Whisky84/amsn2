@@ -57,7 +57,7 @@ class ContactListModel(QAbstractListModel):
     # amsn2 interface
 
     def contactlist_updated(self, clView):
-        print "NotImplementedError\t\t\tContactListModel.contactlist_updated()"
+        print "NotImplementedError\t\tContactListModel.contactlist_updated()"
         
 
     def contact_updated(self, contact):
@@ -108,6 +108,12 @@ class ContactListModel(QAbstractListModel):
         #print "\t\t\t\tContactListModel.group_updated()"
         self.groupDict[gView.uid] = (gView.name, gView.contact_ids)
         #print "\t\t\t\t\tlen(self.groupDict) = " + str(len(self.groupDict))
+
+    def getIndexByUid(self, uid):
+        for i in range(len(self.contactList)):
+            if self.contactList[i].uid == uid:
+                return i
+        return None
 
 
 

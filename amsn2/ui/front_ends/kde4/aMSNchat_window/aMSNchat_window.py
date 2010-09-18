@@ -1,27 +1,34 @@
 # -*- coding: utf-8 -*-
 
+from amsn2.ui.front_ends.kde4.widgets import KTextEditMod
+
 from amsn2.ui import base
 
-from amsn2.views import MessageView, \
-                        StringView
+from amsn2.views import StringView
 
-from PyKDE4.kdeui import KMainWindow, \
-                         KToolBar, \
-                         KAction, \
+
+from PyKDE4.kdeui import KAction, \
+                         KMainWindow, \
                          KTextBrowser, \
-                         KPushButton, \
-                         KLineEdit
+                         KToolBar, \
+                         KPushButton
+                         
 
-from PyQt4.QtGui import QWidget, \
-                        QVBoxLayout, \
-                        QHBoxLayout, \
+from PyQt4.QtGui import QHBoxLayout, \
                         QLabel, \
-                        QSplitter
+                        QVBoxLayout, \
+                        QSplitter, \
+                        QWidget
                         
 from PyQt4.QtCore import QObject, \
                          QString, \
                          Qt, \
                          SIGNAL
+
+
+import sys
+reload(sys)
+
 
 #test main:
 from PyKDE4.kdecore import KAboutData, \
@@ -31,7 +38,7 @@ from PyKDE4.kdecore import KAboutData, \
 from PyKDE4.kdeui import KApplication
                          
 
-import sys
+
 
 class aMSNChatWindow(base.aMSNChatWindow, KMainWindow):
     """ This interface will represent a chat window of the UI
@@ -39,6 +46,9 @@ class aMSNChatWindow(base.aMSNChatWindow, KMainWindow):
     def __init__(self, amsn_core, parent = None):
         print "PartiallyImplementedError:\taMSNChatWindow.__init__()"
         KMainWindow.__init__(self, parent)
+
+        self._core = amsn_core
+        
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
         self.lay = QVBoxLayout()
@@ -91,6 +101,7 @@ class aMSNChatWindow(base.aMSNChatWindow, KMainWindow):
 
 class aMSNChatWidget(base.aMSNChatWidget, QWidget):
     """ This interface will present a chat widget of the UI """
+    #TODO: We'll probably need a SIGNAL from the contact list model, to update the contact info here.
     def __init__(self, amsn_conversation, parent, contacts_uid):
         """ create the chat widget for the 'parent' window, but don't attach to
         it."""
@@ -101,22 +112,30 @@ class aMSNChatWidget(base.aMSNChatWidget, QWidget):
 
         label = QLabel(contacts_uid[0])
         
-        self.chatText = QString("<i>New Chat</i><br>Go!")
+        topWidget = QWidget()
+        topLay = QHBoxLayout()
+        hisPicture = QLabel()
+        self.chatText = QString("<i>New Chat</i><br>")
         self.chatView = KTextBrowser(None, True)
         self.chatView.setText(self.chatText)
-        self.chatText.append("<img src=\"/home/fastfading/Immagini/schro.jpeg\">")
         self.chatView.setText(self.chatText)
+        topLay.addWidget(hisPicture)
+        topLay.addWidget(self.chatView)
+        topWidget.setLayout(topLay)
 
         bottomWidget = QWidget()
-        editLay = QHBoxLayout()
-        self.lineEdit = KLineEdit()
-        self.lineEditBtn = KPushButton("Send")
-        editLay.addWidget(self.lineEdit)
-        editLay.addWidget(self.lineEditBtn)
-        bottomWidget.setLayout(editLay)
+        bottomLay = QHBoxLayout()
+        myPicture = QLabel()
+        self.textEdit = KTextEditMod()
+        #self.textEdit.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+        self.textEditBtn = KPushButton("Send")
+        bottomLay.addWidget(myPicture)
+        bottomLay.addWidget(self.textEdit)
+        bottomLay.addWidget(self.textEditBtn)
+        bottomWidget.setLayout(bottomLay)
 
         splitter = QSplitter(Qt.Vertical)
-        splitter.addWidget(self.chatView)
+        splitter.addWidget(topWidget)
         splitter.addWidget(bottomWidget)
 
         lay = QVBoxLayout()
@@ -124,9 +143,19 @@ class aMSNChatWidget(base.aMSNChatWidget, QWidget):
         lay.addWidget(splitter)
         self.setLayout(lay)
 
-        QObject.connect(self.lineEditBtn, SIGNAL("clicked()"), self.qslotSendMessage)
-        QObject.connect(self.lineEdit, SIGNAL("returnPressed()"), self.qslotSendMessage)
+        splitter.setCollapsible (0, False)
+        splitter.setCollapsible (1, False)
+        _,splitterPos = splitter.getRange(1)
+        splitter.moveSplitter(splitterPos,1)
 
+        #model = self.parent()._core._ui_manager._contactlist.get_contactlist_widget().getModel()
+        #index = model.getIndexByUid(contacts_uid[0])
+        #if index is not None:
+        #    hisPicture.setPixmap(model.data(QModelIndex(index,0,Qt.DecorationRole)))
+        
+        QObject.connect(self.textEditBtn, SIGNAL("clicked()"), self.qslotSendMessage)
+        QObject.connect(self.textEdit, SIGNAL("returnPressed()"), self.qslotSendMessage)
+        sys.setdefaultencoding("utf8")
         
         
     def on_message_received(self, messageview, formatting):
@@ -135,20 +164,34 @@ class aMSNChatWidget(base.aMSNChatWidget, QWidget):
         print "PartiallyImplementedError:\taMSNChatWidget.on_message_received() messageview =",
         print repr(messageview.msg)
 
+        messageReceived = messageview.to_stringview().parse_default_smileys()
+        print "-->" + repr(messageReceived)
         tempStr = QString("<br>")
         if formatting is not None:
             tempStr.append("<font face=\"%s\" color=\"#%s\">" % ( formatting.font, formatting.color ))
-        tempStr.append(messageview.to_stringview().to_HTML_string())
+
+
+        tempStr.append(messageReceived.to_HTML_string())
+
         if formatting is not None:
             tempStr.append("</font>")
         tempStr.append("<br>")
+
+        vertScrollBar = self.chatView.verticalScrollBar()
+        if vertScrollBar.value() == vertScrollBar.maximum():
+            atBottom = True
+        else:
+            atBottom = False
         
         self.chatText.append(tempStr)
         self.chatView.setText(self.chatText)
-        
+
+        if atBottom:
+            vertScrollBar.setValue(vertScrollBar.maximum())
 
     def on_user_joined(self, nickname):
-        print "NotImplementedError:\t\taMSNChatWidget.on_user_joined()"
+        print "\t\t\t\taMSNChatWidget.on_user_joined()"
+        
 
     def nudge(self):
         print "NotImplementedError:\t\taMSNChatWidget.nudge()"
@@ -160,10 +203,15 @@ class aMSNChatWidget(base.aMSNChatWidget, QWidget):
     # -------------------- QT_SLOTS
 
     def qslotSendMessage(self):
-        message = StringView()
-        message.append_text(str(self.lineEdit.text()))
-        self.lineEdit.setText("")
-        self._amsn_conversation.send_message(message)
+        messageString = str(self.textEdit.toPlainText())
+        if len(messageString) == 0:
+            return
+        messageStringView = StringView()
+        messageStringView.append_text(messageString)
+
+        self.textEdit.setText("")
+        self._amsn_conversation.send_message(messageStringView)
+
 
 if __name__ == "__main__":
     about = KAboutData("a","b",ki18n("c"), "d")
