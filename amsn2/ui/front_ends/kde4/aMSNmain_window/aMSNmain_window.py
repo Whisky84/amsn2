@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from amsn2.ui import base
-from amsn2.core.views import MenuItemView
+from amsn2.views import MenuItemView
 
 from PyKDE4.kdeui import *
 from PyKDE4.kdecore import *
