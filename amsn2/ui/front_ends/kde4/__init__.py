@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import sys
+from amsn2.ui.front_ends.kde4 import adaptationLayer
 
 from amsn2.core import aMSNUserInterfaceManager
+
+import sys
 
 
 #Loading of front end modules

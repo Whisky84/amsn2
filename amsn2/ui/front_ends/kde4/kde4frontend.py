@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from aMSNchat_window import *
-from aMSNchoosers import *
-from aMSNcontact_list import *
-from aMSNlogin_window import *
-from aMSNmain_loop import *
-from aMSNmain_window import *
-from aMSNskins import *
-from aMSNsplash import *
-from aMSNutility import *
-from aMSNwindow import *
+from adaptationLayer  import                            \
+    KFESkinManager          as     SkinManager,         \
+    KFESkin                 as     Skin,                \
+    KFESplashScreen         as aMSNSplashScreen         \
+
+from frontend import                                    \
+    KFEChatWidget           as aMSNChatWidget,          \
+    KFEChatWindow           as aMSNChatWindow,          \
+    KFEContactListWidget    as aMSNContactListWidget,   \
+    KFEContactListWindow    as aMSNContactListWindow,   \
+    KFELoginWindow          as aMSNLoginWindow,         \
+    KFEMainLoop             as aMSNMainLoop,            \
+    KFEMainWindow           as aMSNMainWindow
+
