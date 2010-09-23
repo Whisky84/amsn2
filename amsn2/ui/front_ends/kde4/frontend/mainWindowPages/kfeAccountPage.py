@@ -2,7 +2,7 @@
 
 from amsn2.ui.front_ends.kde4.frontend.widgets  import  KFEPresenceCombo
 
-from amsn2.ui.front_ends.kde4.adaptationLayer   import  kfeViews
+from amsn2.ui.front_ends.kde4.adaptationLayer   import  kfeViews, KFELog
 from amsn2.ui.front_ends.kde4.adaptationLayer   import  KFEPresence,    \
                                                         KFEThemeManager
 import papyon
@@ -29,6 +29,7 @@ from PyQt4.QtCore   import  QObject,        \
 
 class KFEAccountPage(QWidget):
     def __init__(self, loginPage, parent=None):
+        KFELog().l("\t\t      KFEAccountPage.__init__()")
         QWidget.__init__(self, parent)
         self.loginPage = loginPage
         self.accountList = None
@@ -80,6 +81,7 @@ class KFEAccountPage(QWidget):
         
         
     def setAccountList(self, accountList):
+        KFELog().l("\t\t      KFEAccountPage.setAccountList()")
         """ This method will be called when the core needs the login window to
         let the user select among some accounts.
 
@@ -136,24 +138,24 @@ class KFEAccountPage(QWidget):
         self.presenceCombo.setPresence(account.presence)
         #checkboxes:
         self.saveAccountChk.setChecked(account.save)
-        print "DEBUG:\t\t\t\tKFEAccountPage.onChosenAccountChanged() -> I'm about to read savePassword"
+        KFELog().l("DEBUG:\t\t      KFEAccountPage.onChosenAccountChanged() -> I'm about to read savePassword")
         self.savePasswordChk.setChecked(account.savePassword)
-        print "DEBUG:\t\t\t\tKFEAccountPage.onChosenAccountChanged() -> I'm about to read autoLogin"
+        KFELog().l("DEBUG:\t\t      KFEAccountPage.onChosenAccountChanged() -> I'm about to read autoLogin")
         self.autoLoginChk.setChecked(account.autoLogin)
         
         
     def startLogin(self):
         selectedAccount = self.loginPage.getAccountFromEmail(str(self.accountCombo.currentText()))
         if selectedAccount is None:
-            print "DEBUG:\t\t\t\tKFEAccountPage.startLogin(): selectedAccount is None"
+            KFELog().l("DEBUG:\t\t      KFEAccountPage.startLogin(): selectedAccount is None")
             selectedAccount = kfeViews.KFEAccount(str(self.accountCombo.currentText()))
 
         selectedAccount.password = str(self.passwordEdit.text())
         selectedAccount.presence = self.presenceCombo.presence()
         selectedAccount.save = self.saveAccountChk.isChecked()
-        print "DEBUG:\t\t\t\tKFEAccountPage.startLogin() -> I'm about to write savePassword"
+        KFELog().l("DEBUG:\t\t      KFEAccountPage.startLogin() -> I'm about to write savePassword")
         selectedAccount.savePassword = self.savePasswordChk.isChecked()
-        print "DEBUG:\t\t\t\tKFEAccountPage.startLogin() -> I'm about to wite autoLogin"
+        KFELog().l("DEBUG:\t\t      KFEAccountPage.startLogin() -> I'm about to wite autoLogin")
         selectedAccount.autoLogin = self.autoLoginChk.isChecked()
         
         self.loginPage.onLoginRequested(selectedAccount)

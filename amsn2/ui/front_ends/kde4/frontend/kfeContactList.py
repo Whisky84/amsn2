@@ -7,7 +7,7 @@ from models             import  ContactDelegate,        \
                                 
 
 from amsn2.ui.front_ends.kde4   import adaptationLayer
-from amsn2.ui.front_ends.kde4.adaptationLayer import KFEThemeManager
+from amsn2.ui.front_ends.kde4.adaptationLayer import KFEThemeManager, KFELog
 
 
 from widgets        import  KFENickEdit,    \
@@ -20,7 +20,7 @@ from PyQt4.QtCore   import  *
 
 class KFEContactListWindow (adaptationLayer.KFEAbstractContactListWindow):
     def constructor(self, parent=None):
-        print "\t\t\t\tKFEContactListWindow.constructor()"
+        KFELog().l("\t\t   KFEContactListWindow.constructor()")
         self._main_window = parent
 
         self._clwidget = KFEContactListWidget()
@@ -31,16 +31,16 @@ class KFEContactListWindow (adaptationLayer.KFEAbstractContactListWindow):
         pass
     
     def show(self):
-        print "\t\t\t\tKFEContactListWindow.show()"
+        KFELog().l("\t\tKFEContactListWindow.show()")
         self._main_window.switchToWidget(self.contactListPage)
 
     def onMyInfoUpdated(self, view):
-        print "\t\t\t\tKFEContactListWindow.onMyInfoUpdated()"
+        KFELog().l("\t\tKFEContactListWindow.onMyInfoUpdated()")
         self.contactListPage.onMyInfoUpdated(view)
 
 
     def getContactListWidget(self):
-        print "\t\t\t\tKFEContactListWindow.getContactlistWidget()"
+        KFELog().l("\t\t\FEContactListWindow.getContactlistWidget()")
         return self._clwidget
 
 
@@ -49,7 +49,7 @@ class KFEContactListWindow (adaptationLayer.KFEAbstractContactListWindow):
 
 class KFEContactListWidget(adaptationLayer.KFEAbstractContactListWidget, QListView):
     def constructor(self, parent=None):
-        print "PartiallyImplementedError:\tKFEContactListWidget.constructor()"
+        KFELog().l("PartlyImplementedError:\t   KFEContactListWidget.constructor()")
         QListView.__init__(self, parent)
 
         self.cl_model = ContactListModel(self)
@@ -60,15 +60,17 @@ class KFEContactListWidget(adaptationLayer.KFEAbstractContactListWidget, QListVi
 
 
     def onContactlistUpdated(self, clView):
-        print "\t\t\t\tKFEContactListWidget.onContactlistUpdated()"
+        KFELog().l("\t\tKFEContactListWidget.onContactlistUpdated()")
         self.cl_model.onContactListUpdated(clView)
 
 
     def onGroupUpdated(self, groupView):
+        KFELog().l("\t\tKFEContactListWidget.onGroupUpdated()")
         self.cl_model.onGroupUpdated(groupView)
 
 
     def onContactUpdated(self, contactView):
+        KFELog().l("\t\tKFEContactListWidget.onContactUpdated()")
         self.cl_model.onContactUpdated(contactView)
 
     # -------------------- QT_SLOTS

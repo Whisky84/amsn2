@@ -4,7 +4,7 @@ from amsn2.ui import base
 
 class KFEAbstractMainLoop (base.aMSNMainLoop):
     def __init__(self, amsn_core):
-        print "\t\t\t\tKFEAbstractMainLoop.__init__()"
+        print "KFEAbstractMainLoop.__init__()\n\t" #here we cannot use KFELog 'cause we don't have a KApplication
         self.amsn_core = amsn_core
         self.constructor()
 
@@ -23,17 +23,17 @@ class KFEAbstractMainLoop (base.aMSNMainLoop):
         
     #FRONT END INTERFACE
     def constructor(self):
-        print "NotImplementedError:\t\tKFEAbstractMainLoop.constructor()"
+        KFELog().l("KFEAbstractMainLoop.constructor()\tNotImplementedError\n")
     
     def run(self):
-        print "NotImplementedError:\t\tKFEAbstractMainLoop.run()"
+        KFELog().l("KFEAbstractMainLoop.run()\tNotImplementedError\n")
 
     def addIdler(self, idlerFunc):
-        print "NotImplementedError:\t\tKFEAbstractMainLoop.addIdler()"
+        KFELog().l("KFEAbstractMainLoop.addIdler()\tNotImplementedError\n")
 
     def addTimer(self, delay, func):
-        print "NotImplementedError:\t\tKFEAbstractMainLoop.addTimer()"
+        KFELog().l("KFEAbstractMainLoop.addTimer()\tNotImplementedError\n")
 
     def quit(self):
-        print "NotImplementedError:\t\tKFEAbstractMainLoop.quit()"
+        KFELog().l("\FEAbstractMainLoop.quit()\tNotImplementedError\n")
         

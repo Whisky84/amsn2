@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from kfeLog   import KFELog
 from amsn2.ui import base
 
 class KFEAbstractContactListWindow (base.aMSNContactListWindow): # removed KFEWindow mother class
     def __init__(self, amsn_core, parent):
-        print "\t\t\t\tKFEAbstractContactListWindow.__init__()"
+        KFELog().l("KFEAbstractContactListWindow.__init__()\n\t")
         self.amsn_core = amsn_core
         self.constructor(parent)
 
@@ -17,19 +18,19 @@ class KFEAbstractContactListWindow (base.aMSNContactListWindow): # removed KFEWi
 
     #FRONT END SIDE INTERFACE
     def onMyInfoUpdated(self, window):
-        print "NotImplementedError:\t\tKFEAbstractContactListWindow.onMyInfoUpdated()"
+        KFELog().l("KFEAbstractContactListWindow.onMyInfoUpdated()\tNotImplementedError\n")
 
     def onNewConversationRequested(self, uid):
-        print "\t\t\t\tKFEAbstractContactListWindow.onNewConversationRequested()"
+        KFELog().l("KFEAbstractContactListWindow.onNewConversationRequested()\n")
         self.amsn_core._conversation_manager.new_conversation([uid])
 
     def getContactListWidget(self):
-        print "NotImplementedError:\t\tKFEAbstractContactListWindow.getContactListWidget()"
+        KFELog().l("KFEAbstractContactListWindow.getContactListWidget()\tNotImplementedError\n")
         
 
 class KFEAbstractContactListWidget(base.aMSNContactListWidget):
     def __init__(self, parent=None):
-        print "NotImplementedError:\t\tKFEContactListWidget.__init__()"
+        KFELog().l("KFEAbstractContactListWidget.__init__()\n")
         self.constructor(parent)
 
     #CORE SIDE INTERFACE
@@ -44,10 +45,10 @@ class KFEAbstractContactListWidget(base.aMSNContactListWidget):
 
     #FRONT END SIDE INTERFACE
     def onContactListUpdated(self, clView):
-        print "NotImplementedError:\t\tKFEAbstractContactListWidget.onContactListUpdated()"
+        KFELog().l("KFEAbstractContactListWidget.onContactListUpdated()\tNotImplementedError\n")
 
     def onGroupUpdated(self, groupView):
-        print "NotImplementedError:\t\tKFEAbstractContactListWidget.onGroupUpdated()"
+        KFELog().l("KFEAbstractContactListWidget.onGroupUpdated()\tNotImplementedError\n")
 
     def onContactUpdated(self, contactView):
-        print "NotImplementedError:\t\tKFEAbstractContactListWidget.onContactUpdated()"
+        KFELog().l("KFEAbstractContactListWidget.onContactUpdated()\tNotImplementedError\n")

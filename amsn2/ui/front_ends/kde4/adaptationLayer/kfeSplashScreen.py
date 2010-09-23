@@ -1,9 +1,9 @@
-
+from kfeLog import KFELog
 from amsn2.ui import base
 
 class KFESplashScreen(base.aMSNSplashScreen):
     def __init__(self, amsn_core, parent):
-        print "NotImplementedError:\t\tKFESplashScreen.__init__()"
+        KFELog().l("NotImplementedError:\tKFESplashScreen.__init__()")
         
     #CORE SIDE INTERFACE
     #def show(self):
@@ -20,14 +20,13 @@ class KFESplashScreen(base.aMSNSplashScreen):
 
     #FRONT END SIDE INTERFACE
     def show(self):
-        print "NotImplementedError:\t\tKFESplashScreen.show()"
+        KFELog().l("NotImplementedError:\tKFESplashScreen.show()")
 
     def hide(self):
-        print "NotImplementedError:\t\tKFESplashScreen.hide()"
+        KFELog().l("NotImplementedError:\tKFESplashScreen.hide()")
 
     def setText(self, text):
-        print "NotImplementedError:\t\tKFESplashScreen.setText()"
+        KFELog().l("NotImplementedError:\tKFESplashScreen.setText()")
 
     def setImage(self, image):
-        print "NotImplementedError:\t\tKFESplashScreen.setImage()"
-        
+        KFELog().l("NotImplementedError:\tKFESplashScreen.setImage()")

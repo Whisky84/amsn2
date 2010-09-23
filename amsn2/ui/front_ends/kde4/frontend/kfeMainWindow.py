@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from amsn2.ui.front_ends.kde4.adaptationLayer import KFELog
 from amsn2.ui.front_ends.kde4 import adaptationLayer
 
 from PyKDE4.kdeui   import  *
@@ -8,27 +9,27 @@ from PyQt4.QtGui    import  *
 
 class KFEMainWindow (adaptationLayer.KFEAbstractMainWindow, KMainWindow):
     def constructor(self):
-        print "\t\t\t\tKFEMainWindow.constructor()"
+        KFELog().l("\t\t   KFEMainWindow.constructor()")
         KMainWindow.__init__(self)
         self.setWindowIcon(KIcon("im-user"))
         self.widgetStack = QStackedWidget()
         self.setCentralWidget(self.widgetStack)
 
     def setMenu(self, menuBar):
-        print "\t\t\t\tKFEMainWindow.constructor()"
+        KFELog().l("\t\tKFEMainWindow.setMenu()")
         self.setMenuBar(menuBar)
 
     def setTitle(self, title):
-        print "\t\t\t\tKFEMainWindow.setTitle()"
+        KFELog().l("\t\tKFEMainWindow.setTitle()")
         self.setPlainCaption(title)
 
     def show(self):
-        print "\t\t\t\tKFEMainWindow.show()"
+        KFELog().l("\t\tKFEMainWindow.show()")
         KMainWindow.show(self)
         self.onMainWindowShown()
 
     def switchToWidget(self, widget):
-        print "\t\t\t\tKFEMainWindow.switchToWidget()"
+        KFELog().l("\t\t   KFEMainWindow.switchToWidget()")
         index = self.widgetStack.indexOf(widget)
         if index == -1:
             index = self.widgetStack.addWidget(widget)
@@ -37,7 +38,7 @@ class KFEMainWindow (adaptationLayer.KFEAbstractMainWindow, KMainWindow):
 
 # -------------------- QT_OVERLOAD
     def closeEvent(self, event):
-        print "\t\t\t\tKFEMainWindow.closeEvent()"
+        KFELog().l("\t\t\t\tKFEMainWindow.closeEvent()")
         event.accept()
         self.onClose()
 

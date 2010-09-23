@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from kfeLog     import KFELog
+
 from kfeViews   import KFEAccount
 from amsn2.ui   import base
 
 
 class KFEAbstractLoginPage (base.aMSNLoginWindow): # removed KFEWindow mother class
     def __init__(self, amsn_core, parent):
-        print "\t\t\t\tKFEAbstractLoginPage.__init__() - " + repr(amsn_core)
+        KFELog().l("KFEAbstractLoginPage.__init__()\n\t")
         self.amsn_core = amsn_core
         self._account_views = None # The core relies on this to be set...
         self.constructor(parent)
@@ -30,26 +32,26 @@ class KFEAbstractLoginPage (base.aMSNLoginWindow): # removed KFEWindow mother cl
 
     #FRONT END SIDE INTERFACE
     def constructor(self, parent):
-        print "NotImplementedError:\t\tKFEAbstractLoginPage.constructor()"
+        KFELog().l("KFEAbstractLoginPage.constructor()\tNotImplementedError\n")
 
     def getAccountFromEmail(self, email):
-        print "\t\t\t\tKFEAbstractLoginPage.getAccountFromEmail()"
+        KFELog().l("KFEAbstractLoginPage.getAccountFromEmail()\n")
         return KFEAccount.fromAccountView(
                 self.amsn_core._ui_manager.get_accountview_from_email(email) )
         
     def setAccountList(self, accountList):
-        print "NotImplementedError:\t\tKFEAbstractLoginPage.setAccountList()"
+        KFELog().l("KFEAbstractLoginPage.setAccountList()\tNotImplementedError\n")
 
     def onLoginRequested(self, account):
-        print "\t\t\t\tKFEAbstractLoginPage.onLoginRequested()"
+        KFELog().l("KFEAbstractLoginPage.onLoginRequested()\n")
         self.amsn_core.signin_to_account(self, account)
         
     def onSigningIn(self):
-        print "NotImplementedError:\t\tKFEAbstractLoginPage.onSigningIn()"
+        KFELog().l("KFEAbstractLoginPage.onSigningIn()\tNotImplementedError\n")
 
     def onSigningOut(self):
-        print "NotImplementedError:\t\tKFEAbstractLoginPage.onSigningOut()"
+        KFELog().l("KFEAbstractLoginPage.onSigningOut()\tNotImplementedError\n")
 
     def onConnecting(self):
-        print "NotImplementedError:\t\tKFEAbstractLoginPage.onConnecting()"
+        KFELog().l("KFEAbstractLoginPage.onConnecting()\tNotImplementedError\n")
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from amsn2.ui.front_ends.kde4 import adaptationLayer
+from amsn2.ui.front_ends.kde4.adaptationLayer import KFELog
 from amsn2.core     import  aMSNCore
 
 from PyKDE4.kdeui   import  KApplication
@@ -23,12 +24,12 @@ class KFEMainLoop(adaptationLayer.KFEAbstractMainLoop):
     Everythin related to the main loop will be delegates here """
 
     def constructor(self):
-        print "\t\t\t\tKFEMainLoop.constructor()"
         #Qt event loop crashes if we don't set this
         os.putenv("QT_NO_GLIB","1")
         self.aboutData = KAboutData("amsn2", "", ki18n("aMSN2"), "0.001")
         KCmdLineArgs.init(sys.argv[2:], self.aboutData)
         self.app = KApplication()
+        KFELog().l("KFEMainLoop.constructor()\n")
         #What are these for? :P
         self.gmainloop = gobject.MainLoop()
         self.gcontext = self.gmainloop.get_context()
@@ -36,7 +37,7 @@ class KFEMainLoop(adaptationLayer.KFEAbstractMainLoop):
 
     def run(self):
         """ This will run the the main loop"""
-        print "\t\t\t\tKFEMainLoop.run()"
+        KFELog().l("KFEMainLoop.run()\n")
         self.idleTimer = QTimer(KApplication.instance())
         QObject.connect(self.idleTimer, SIGNAL('timeout()'), self.onIdle)
         self.idleTimer.start(100)
@@ -51,7 +52,7 @@ class KFEMainLoop(adaptationLayer.KFEAbstractMainLoop):
 
         @type func: function
         """
-        print "NotImplementedError:\t\tKFEMainLoop.idler_add()"
+        KFELog().l("KFEMainLoop.idler_add()\tNotImplementedError\n")
 
 
     def addTimer(self, delay, func):
@@ -61,12 +62,12 @@ class KFEMainLoop(adaptationLayer.KFEAbstractMainLoop):
         @type delay:
         @type func: function
         """
-        print "NotImplementedError:\t\tKFEMainLoop.timer_add()"
-
+        KFELog().l("KFEMainLoop.timer_add()\tNotImplementedError\n")
+        
 
     def quit(self):
         """ This will be called when the core wants to exit """
-        print "\t\t\t\tKFEMainLoop.quit()"
+        KFELog().l("KFEMainLoop.quit()")
         self.app.quit()
 
 

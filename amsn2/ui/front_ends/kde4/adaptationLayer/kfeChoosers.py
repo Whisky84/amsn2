@@ -1,15 +1,17 @@
 
+from kfeLog import KFELog
+
 from amsn2.ui import base
 
 class KFEFileChooser(base.aMSNFileChooser):
     def __init__(self, filters, directory, callback, title = "aMSN Display Picture Chooser"):
-        print "NotImplementedError:\t\tKFEFileChooser.__init__()"
+        KFELog().l("NotImplementedError:\tKFEFileChooser.__init__()")
 
     def set_title(self, title):
-        print "NotImplementedError:\t\tKFEFileChooser.set_title()"
+        KFELog().l("NotImplementedError:\tKFEFileChooser.set_title()")
 
     def show(self):
-        print "NotImplementedError:\t\tKFEFileChooser.show()"
+        KFELog().l("NotImplementedError:\tKFEFileChooser.show()")
 
 
 
@@ -17,10 +19,10 @@ class KFEFileChooser(base.aMSNFileChooser):
 
 class KFEDisplayPicChooser(base.aMSNDPChoseer):
     def __init__(self, callback, backend_manager):
-        print "NotImplementedError:\t\tKFEDisplayPicChooser.__init__()"
+        KFELog().l("NotImplementedError:\tKFEDisplayPicChooser.__init__()")
 
     def set_title(self, title):
-        print "NotImplementedError:\t\tKFEDisplayPicChooser.set_title()"
+        KFELog().l("NotImplementedError:\tKFEDisplayPicChooser.set_title()")
 
     def show(self):
-        print "NotImplementedError:\t\tKFEDisplayPicChooser.show()"
+        KFELog().l("NotImplementedError:\tKFEDisplayPicChooser.show()")

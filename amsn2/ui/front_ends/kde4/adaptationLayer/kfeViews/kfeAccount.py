@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from .. kfeLog      import KFELog
+
 from amsn2.views import AccountView,    \
                         ImageView,      \
                         StringView      \
@@ -12,19 +14,19 @@ class KFEAccount(AccountView):
         AccountView.__init__(self, aMSNCore(), email)
 
     def getAutoLogin(self):
-        print "\t\t\t\tKFEAccount.getAutoLogin()"
+        KFELog().l("\t\tKFEAccount.getAutoLogin()")
         return self.autologin
 
     def setAutoLogin(self, bool):
-        print "\t\t\t\tKFEAccount.setAutoLogin()"
+        KFELog().l("\t\tKFEAccount.setAutoLogin()")
         self.autologin = bool
         
     def getSavePassword(self):
-        print "\t\t\t\tKFEAccount.getSavePassword()"
+        KFELog().l("\t\tKFEAccount.getSavePassword()")
         return self.save_password
         
     def setSavePassword(self, bool):
-        print "\t\t\t\tKFEAccount.setSavePassword()"
+        KFELog().l("\t\tKFEAccount.setSavePassword()")
         self.save_password = bool
 
     autoLogin = property(getAutoLogin, setAutoLogin)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from amsn2.ui.front_ends.kde4.adaptationLayer import KFEThemeManager
+from amsn2.ui.front_ends.kde4.adaptationLayer import KFEThemeManager, KFELog
 
 from PyQt4.QtGui    import  QLabel,                 \
                             QPixmap,                \
@@ -76,11 +76,11 @@ class ContactListModel(QAbstractListModel):
     # amsn2 interface
 
     def onContactListUpdated(self, clView):
-        print "NotImplementedError\t\tContactListModel.onContactListUpdated()"
+        KFELog().l("NotImplementedError\tContactListModel.onContactListUpdated()")
 
 
     def onContactUpdated(self, contact):
-        #print "\t\t\t\tContactListModel.contact_updated()"
+        KFELog().l("\t\tContactListModel.contact_updated()")
         #print "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t(UID)"
         #print "\tDevo elaborare: " + str(contact.name.get_tag("nickname")) +  "\tUID:" + contact.uid
         #if contactList is empty add directly the contact and return:
@@ -119,7 +119,7 @@ class ContactListModel(QAbstractListModel):
 
 
     def onGroupUpdated(self, gView):
-        #print "\t\t\t\tContactListModel.group_updated()"
+        KFELog().l("\t\tContactListModel.onGroupUpdated()")
         self.groupDict[gView.uid] = (gView.name, gView.contact_ids)
         #print "\t\t\t\t\tlen(self.groupDict) = " + str(len(self.groupDict))
 

@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
+from kfeLog import KFELog
+
 class KFEThemeManager:
     __sharedState = {}
     __MANAGER = None
     def __init__(self):
         if not KFEThemeManager.__MANAGER:
-            print "** WARNING KFEBorgThemeManager is inizialized without a theme manager!! WARNING **"
+            KFELog().l("** WARNING KFEThemeManager is inizialized without a theme manager!! WARNING **")
             self.__dict__ = {}
         else:
             self.__dict__ = KFEThemeManager.__sharedState
 
     @staticmethod
     def setManager(manager):
-        print "\t\t\t\tKFEBorgThemeManager.setManager()"
         KFEThemeManager.__MANAGER = manager
 
     def pathOf(self, identifier):

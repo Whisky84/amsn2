@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
+
 from amsn2.ui.front_ends.kde4.frontend.widgets  import  KFEPresenceCombo,   \
                                                         KFENickEdit
-from amsn2.ui.front_ends.kde4.adaptationLayer   import  KFEThemeManager
+from amsn2.ui.front_ends.kde4.adaptationLayer   import  KFEThemeManager, KFELog
 
 from PyQt4.QtGui    import *
 from PyQt4.QtCore   import *
 
 class KFEContactListPage (QWidget):
     def __init__(self, contactListWidget, parent=None):
-        print "\t\t\t\tKFEContactListPage.__init__()"
+        KFELog().l("\t\t      KFEContactListPage.__init__()")
         QWidget.__init__(self, parent)
 
         lay = QVBoxLayout()
@@ -38,7 +39,7 @@ class KFEContactListPage (QWidget):
         QWidget.setLayout(self, lay)
 
     def onMyInfoUpdated(self, view):
-        print "PartiallyImplementedError:\tKFEContactListPage.onMyInfoUpdated()"
+        KFELog().l("PartlyImplementedError:\t      KFEContactListPage.onMyInfoUpdated()")
         self.nick.setText(view.nick.to_HTML_string())
         if not QString(str(view.psm)).isEmpty(): #Think carefully: i think we can remove this if (look at KPresenceComboBox.setText()'s implementation)
             self.psm.setText(view.psm.to_HTML_string())

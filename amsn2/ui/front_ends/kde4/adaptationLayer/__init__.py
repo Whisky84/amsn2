@@ -13,3 +13,5 @@ from kfeThemeManager    import  KFEThemeManager
 
 import kfeViews
 
+from kfeLog             import KFELog
+
