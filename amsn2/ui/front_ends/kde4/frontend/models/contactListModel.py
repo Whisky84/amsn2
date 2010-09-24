@@ -76,11 +76,11 @@ class ContactListModel(QAbstractListModel):
     # amsn2 interface
 
     def onContactListUpdated(self, clView):
-        KFELog().l("NotImplementedError\tContactListModel.onContactListUpdated()")
+        KFELog().l("ContactListModel.onContactListUpdated()", 1)
 
 
     def onContactUpdated(self, contact):
-        KFELog().l("\t\tContactListModel.contact_updated()")
+        KFELog().l("ContactListModel.contact_updated()")
         #print "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t(UID)"
         #print "\tDevo elaborare: " + str(contact.name.get_tag("nickname")) +  "\tUID:" + contact.uid
         #if contactList is empty add directly the contact and return:
@@ -119,7 +119,7 @@ class ContactListModel(QAbstractListModel):
 
 
     def onGroupUpdated(self, gView):
-        KFELog().l("\t\tContactListModel.onGroupUpdated()")
+        KFELog().l("ContactListModel.onGroupUpdated()")
         self.groupDict[gView.uid] = (gView.name, gView.contact_ids)
         #print "\t\t\t\t\tlen(self.groupDict) = " + str(len(self.groupDict))
 

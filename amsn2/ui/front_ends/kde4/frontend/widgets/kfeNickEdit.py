@@ -99,7 +99,7 @@ class KFENickEdit(QStackedWidget):
         self.setText(text)
         #if the text is empty, and it is not allowed to be so, the label remains unchanged
         self.setCurrentWidget(self.label)
-        self.emit(SIGNAL("nickChanged()"))
+        self.emit(SIGNAL("nickChanged(QString)"), text)
 
 
 

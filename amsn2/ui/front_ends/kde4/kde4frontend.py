@@ -13,4 +13,13 @@ from frontend import                                    \
     KFELoginWindow          as aMSNLoginWindow,         \
     KFEMainLoop             as aMSNMainLoop,            \
     KFEMainWindow           as aMSNMainWindow
+    
+from amsn2.ui.front_ends.kde4.adaptationLayer    import          \
+    KFEAbstractErrorWindow          as  aMSNErrorWindow,        \
+    KFEAbstractNotificationWindow   as  aMSNNotificationWindow, \
+    KFEAbstractDialogWindow         as  aMSNDialogWindow,       \
+    KFEAbstractContactInputWindow   as  aMSNContactInputWindow, \
+    KFEAbstractGroupInputWindow     as  aMSNGroupInputWindow,   \
+    KFEAbstractContactDeleteWindow  as  aMSNContactDeleteWindow,\
+    KFEAbstractGroupDeleteWindow    as  aMSNGroupDeleteWindow
 

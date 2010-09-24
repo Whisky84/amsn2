@@ -3,7 +3,7 @@ from amsn2.ui import base
 
 class KFESplashScreen(base.aMSNSplashScreen):
     def __init__(self, amsn_core, parent):
-        KFELog().l("NotImplementedError:\tKFESplashScreen.__init__()")
+        KFELog().l("KFESplashScreen.__init__()", False, 2)
         
     #CORE SIDE INTERFACE
     #def show(self):
@@ -20,13 +20,13 @@ class KFESplashScreen(base.aMSNSplashScreen):
 
     #FRONT END SIDE INTERFACE
     def show(self):
-        KFELog().l("NotImplementedError:\tKFESplashScreen.show()")
+        KFELog().l("KFESplashScreen.show()", False, 2)
 
     def hide(self):
-        KFELog().l("NotImplementedError:\tKFESplashScreen.hide()")
+        KFELog().l("NKFESplashScreen.hide()", False, 2)
 
     def setText(self, text):
-        KFELog().l("NotImplementedError:\tKFESplashScreen.setText()")
+        KFELog().l("KFESplashScreen.setText()", False, 2)
 
     def setImage(self, image):
-        KFELog().l("NotImplementedError:\tKFESplashScreen.setImage()")
+        KFELog().l("KFESplashScreen.setImage()", False, 2)

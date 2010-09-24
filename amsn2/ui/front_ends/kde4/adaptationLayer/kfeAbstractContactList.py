@@ -5,7 +5,7 @@ from amsn2.ui import base
 
 class KFEAbstractContactListWindow (base.aMSNContactListWindow): # removed KFEWindow mother class
     def __init__(self, amsn_core, parent):
-        KFELog().l("KFEAbstractContactListWindow.__init__()\n\t")
+        KFELog().l("KFEAbstractContactListWindow.__init__()", True)
         self.amsn_core = amsn_core
         self.constructor(parent)
 
@@ -18,19 +18,32 @@ class KFEAbstractContactListWindow (base.aMSNContactListWindow): # removed KFEWi
 
     #FRONT END SIDE INTERFACE
     def onMyInfoUpdated(self, window):
-        KFELog().l("KFEAbstractContactListWindow.onMyInfoUpdated()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractContactListWindow.onMyInfoUpdated()", False, 2)
 
     def onNewConversationRequested(self, uid):
-        KFELog().l("KFEAbstractContactListWindow.onNewConversationRequested()\n")
+        KFELog().l("KFEAbstractContactListWindow.onNewConversationRequested()")
         self.amsn_core._conversation_manager.new_conversation([uid])
 
     def getContactListWidget(self):
-        KFELog().l("KFEAbstractContactListWindow.getContactListWidget()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractContactListWindow.getContactListWidget()", False, 2)
+
+    #FESI'
+    def onNewNickSet(self, nick):
+        self.amsn_core._personalinfo_manager._on_nick_changed(str(nick))
+        KFELog().d(nick, "KFEAbstractContactListWindow.onNewNickSet()")
+        
+    def onNewPsmSet(self, psm):
+        self.amsn_core._personalinfo_manager._on_PSM_changed(str(psm))
+        KFELog().d(psm, "KFEAbstractContactListWindow.onNewPsmSet()")
+        
+    def onNewPresenceSet(self):
+        pass
+        
         
 
 class KFEAbstractContactListWidget(base.aMSNContactListWidget):
     def __init__(self, parent=None):
-        KFELog().l("KFEAbstractContactListWidget.__init__()\n")
+        KFELog().l("KFEAbstractContactListWidget.__init__()", True)
         self.constructor(parent)
 
     #CORE SIDE INTERFACE
@@ -45,10 +58,10 @@ class KFEAbstractContactListWidget(base.aMSNContactListWidget):
 
     #FRONT END SIDE INTERFACE
     def onContactListUpdated(self, clView):
-        KFELog().l("KFEAbstractContactListWidget.onContactListUpdated()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractContactListWidget.onContactListUpdated()", False, 2)
 
     def onGroupUpdated(self, groupView):
-        KFELog().l("KFEAbstractContactListWidget.onGroupUpdated()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractContactListWidget.onGroupUpdated()", False, 2)
 
     def onContactUpdated(self, contactView):
-        KFELog().l("KFEAbstractContactListWidget.onContactUpdated()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractContactListWidget.onContactUpdated()", False, 2)

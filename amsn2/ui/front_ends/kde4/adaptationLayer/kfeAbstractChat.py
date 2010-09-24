@@ -7,7 +7,7 @@ from amsn2.ui import base
 
 class KFEAbstractChatWindow (base.aMSNChatWindow): 
     def __init__(self, amsn_core):
-        KFELog().l("KFEAbstractChatWindow.__init__()\n\t")
+        KFELog().l("KFEAbstractChatWindow.__init__()", True)
         self.amsn_core = amsn_core
         self.constructor()
 
@@ -16,7 +16,7 @@ class KFEAbstractChatWindow (base.aMSNChatWindow):
         self.addChatWidget(chat_widget)
 
     def set_menu(self, menuView):
-        KFELog().l("tKFEAbstractChatWindow.set_menu()\n\t")
+        KFELog().l("KFEAbstractChatWindow.set_menu()")
         menuBar = kMenuBarFromMenuView(menuView, self)
         self.setMenu(menuBar)
 
@@ -25,16 +25,16 @@ class KFEAbstractChatWindow (base.aMSNChatWindow):
 
     #FRONT END SIDE INTERFACE
     def addChatWidget(self, chatWidget):
-        KFELog().l("KFEAbstractChatWindow.addChatWidget()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractChatWindow.addChatWidget()", False, 2)
 
     def setTitle(self, title):
-        KFELog().l("KFEAbstractChatWindow.setTitle()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractChatWindow.setTitle()", False, 2)
 
 
 
 class KFEAbstractChatWidget (base.aMSNChatWidget):
     def __init__(self, amsn_conversation, parent, contacts_uid):
-        KFELog().l("KFEAbstractChatWidget.__init__()\n\t")
+        KFELog().l("KFEAbstractChatWidget.__init__()", True)
         self.amsn_conversation = amsn_conversation
         self.constructor(contacts_uid, parent)
 
@@ -51,16 +51,16 @@ class KFEAbstractChatWidget (base.aMSNChatWidget):
 
     #FRONT END SIDE INTERFACE
     def onMessageReceived(self, messageView, formatting):
-        KFELog().l("KFEAbstractChatWidget.onMessageReceived()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractChatWidget.onMessageReceived()", False, 2)
 
     def onNudge(self):
-        KFELog().l("KFEAbstractChatWidget.onNudge()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractChatWidget.onNudge()", False, 2)
 
     def onUserTyping(self, contact):
-        KFELog().l("KFEAbstractChatWidget.onUserTyping()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractChatWidget.onUserTyping()", False, 2)
 
     def sendMessage(self, message):
-        KFELog().l("KFEAbstractChatWidget.sendMessage()\n\t")
+        KFELog().l("KFEAbstractChatWidget.sendMessage()")
         self.amsn_conversation.send_message(message)
 
 

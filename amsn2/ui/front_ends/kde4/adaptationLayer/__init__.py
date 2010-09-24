@@ -8,6 +8,16 @@ from kfeAbstractMainWindow      import  KFEAbstractMainWindow
 from kfeSkinManager     import  KFESkinManager, KFESkin
 from kfeSplashScreen    import  KFESplashScreen
 
+from kfeAbstractUtility import  KFEAbstractErrorWindow,        \
+                                KFEAbstractNotificationWindow, \
+                                KFEAbstractDialogWindow,       \
+                                KFEAbstractContactInputWindow, \
+                                KFEAbstractGroupInputWindow,   \
+                                KFEAbstractContactDeleteWindow,\
+                                KFEAbstractGroupDeleteWindow
+
+################
+
 from kfePresence        import  KFEPresence
 from kfeThemeManager    import  KFEThemeManager
 

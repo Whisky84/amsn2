@@ -11,7 +11,7 @@ from PyQt4.QtGui    import  QHBoxLayout,    \
 
 class KFESigningInPage (QWidget):
     def __init__(self, parent = None):
-        KFELog().l("\t\t      KFESigningInPage.__init__()")
+        KFELog().l("KFESigningInPage.__init__()")
         QWidget.__init__(self, parent)
         
         vLay = QVBoxLayout()
@@ -35,6 +35,6 @@ class KFESigningInPage (QWidget):
         
 
     def onConnecting(self, progress, message):
-        KFELog().l("\t\t      KFESigningInPage.onConnecting()")
+        KFELog().l("KFESigningInPage.onConnecting()")
         self.progressBar.setValue(progress * 100)
         self.progressMessage.setText(message)

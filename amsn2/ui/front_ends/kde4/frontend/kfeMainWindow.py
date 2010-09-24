@@ -9,27 +9,27 @@ from PyQt4.QtGui    import  *
 
 class KFEMainWindow (adaptationLayer.KFEAbstractMainWindow, KMainWindow):
     def constructor(self):
-        KFELog().l("\t\t   KFEMainWindow.constructor()")
+        KFELog().l("KFEMainWindow.constructor()")
         KMainWindow.__init__(self)
         self.setWindowIcon(KIcon("im-user"))
         self.widgetStack = QStackedWidget()
         self.setCentralWidget(self.widgetStack)
 
     def setMenu(self, menuBar):
-        KFELog().l("\t\tKFEMainWindow.setMenu()")
+        KFELog().l("KFEMainWindow.setMenu()")
         self.setMenuBar(menuBar)
 
     def setTitle(self, title):
-        KFELog().l("\t\tKFEMainWindow.setTitle()")
+        KFELog().l("KFEMainWindow.setTitle()")
         self.setPlainCaption(title)
 
     def show(self):
-        KFELog().l("\t\tKFEMainWindow.show()")
+        KFELog().l("KFEMainWindow.show()")
         KMainWindow.show(self)
         self.onMainWindowShown()
 
     def switchToWidget(self, widget):
-        KFELog().l("\t\t   KFEMainWindow.switchToWidget()")
+        KFELog().l("KFEMainWindow.switchToWidget()")
         index = self.widgetStack.indexOf(widget)
         if index == -1:
             index = self.widgetStack.addWidget(widget)
@@ -38,7 +38,7 @@ class KFEMainWindow (adaptationLayer.KFEAbstractMainWindow, KMainWindow):
 
 # -------------------- QT_OVERLOAD
     def closeEvent(self, event):
-        KFELog().l("\t\t\t\tKFEMainWindow.closeEvent()")
+        KFELog().l("KFEMainWindow.closeEvent()")
         event.accept()
         self.onClose()
 

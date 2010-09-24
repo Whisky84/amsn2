@@ -36,7 +36,7 @@ class KFETextEditMod (KTextEdit):
                 KTextEdit.keyReleaseEvent(self, fakeEvent)
             elif keyEvent.modifiers() == Qt.NoModifier:
                 if not self.ReturnPressed:
-                    print "DEBUG:\t\t\t\tKTextEditMod.keyReleaseEvent(): There's some problem!"
+                    KFELog().d("There's some problem!", "KTextEditMod.keyReleaseEvent()")
                 keyEvent.accept()
                 self.ReturnPressed = False
                 self.emit(SIGNAL("returnPressed()"))

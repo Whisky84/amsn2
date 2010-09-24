@@ -12,29 +12,29 @@ from PyQt4.QtCore       import  QObject
 
 class KFELoginWindow (adaptationLayer.KFEAbstractLoginPage, QObject):
     def constructor(self, parent):
-        KFELog().l("\t\t   KFELoginWindow.constructor()")
+        KFELog().l("KFELoginWindow.constructor()")
         QObject.__init__(self, parent)
         self.signingInPage = KFESigningInPage()
         self.accountPage   = KFEAccountPage(self)
 
     def show(self):
-        KFELog().l("\t\tKFELoginWindow.show()\n\t --> ")
+        KFELog().l("KFELoginWindow.show()",  True)
         self.parent().switchToWidget(self.accountPage)
     
     def setAccountList(self, accountList):
-        KFELog().l("\t\tKFELoginWindow.setAccountList()\n\t --> ")
+        KFELog().l("KFELoginWindow.setAccountList()", True)
         self.accountPage.setAccountList(accountList)
 
     def onSigningIn(self):
-        KFELog().l("\t\tKFELoginWindow.onSigningIn()\n\t --> ")
+        KFELog().l("KFELoginWindow.onSigningIn()", True)
         self.parent().switchToWidget(self.signingInPage)
 
     def onSigningOut(self):
-        KFELog().l("\t\tKFELoginWindow.onSigningOut()\n\t --> ")
+        KFELog().l("KFELoginWindow.onSigningOut()", True)
         self.parent().switchToWidget(self.accountPage)
 
     def onConnecting(self, progress, message):
-        KFELog().l("\t\tKFELoginWindow.onConnecting()\n\t --> ")
+        KFELog().l("KFELoginWindow.onConnecting()", True)
         self.signingInPage.onConnecting(progress, message)
 
     # If we don't specify this, when calling hide(), base.aMSNLoginWindow's hide()

@@ -29,7 +29,7 @@ class KFEMainLoop(adaptationLayer.KFEAbstractMainLoop):
         self.aboutData = KAboutData("amsn2", "", ki18n("aMSN2"), "0.001")
         KCmdLineArgs.init(sys.argv[2:], self.aboutData)
         self.app = KApplication()
-        KFELog().l("KFEMainLoop.constructor()\n")
+        KFELog().l("KFEMainLoop.constructor()")
         #What are these for? :P
         self.gmainloop = gobject.MainLoop()
         self.gcontext = self.gmainloop.get_context()
@@ -37,7 +37,7 @@ class KFEMainLoop(adaptationLayer.KFEAbstractMainLoop):
 
     def run(self):
         """ This will run the the main loop"""
-        KFELog().l("KFEMainLoop.run()\n")
+        KFELog().l("KFEMainLoop.run()")
         self.idleTimer = QTimer(KApplication.instance())
         QObject.connect(self.idleTimer, SIGNAL('timeout()'), self.onIdle)
         self.idleTimer.start(100)
@@ -52,7 +52,7 @@ class KFEMainLoop(adaptationLayer.KFEAbstractMainLoop):
 
         @type func: function
         """
-        KFELog().l("KFEMainLoop.idler_add()\tNotImplementedError\n")
+        KFELog().l("KFEMainLoop.idler_add()", False, 2)
 
 
     def addTimer(self, delay, func):
@@ -62,8 +62,7 @@ class KFEMainLoop(adaptationLayer.KFEAbstractMainLoop):
         @type delay:
         @type func: function
         """
-        KFELog().l("KFEMainLoop.timer_add()\tNotImplementedError\n")
-        
+        KFELog().l("KFEMainLoop.timer_add()", False, 2)
 
     def quit(self):
         """ This will be called when the core wants to exit """

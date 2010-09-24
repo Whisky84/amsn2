@@ -14,7 +14,7 @@ from PyQt4.QtCore   import *
 
 class KFEAbstractMainWindow (base.aMSNMainWindow, base.aMSNWindow): # removed KFEWindow mother class, added base.aMSNWindow
     def __init__(self, amsn_core):
-        KFELog().l("KFEAbstractMainWindow.__init__()\n  ")
+        KFELog().l("KFEAbstractMainWindow.__init__()", True)
         self.amsn_core = amsn_core
         KFEThemeManager.setManager(self.amsn_core._theme_manager)
         KFEPresence().setCore(self.amsn_core)
@@ -29,7 +29,7 @@ class KFEAbstractMainWindow (base.aMSNMainWindow, base.aMSNWindow): # removed KF
         self.setTitle(title)
         
     def set_menu(self, menuView):
-        KFELog().l("KFEAbstractMainWindow.set_menu()\n\t")
+        KFELog().l("KFEAbstractMainWindow.set_menu()", True)
         menuBar = kMenuBarFromMenuView(menuView, self)
         self.setMenu(menuBar)
 
@@ -39,10 +39,10 @@ class KFEAbstractMainWindow (base.aMSNMainWindow, base.aMSNWindow): # removed KF
 
     #FRONT END SIDE INTERFACE
     def constructor(self):
-        KFELog().l("KFEAbstractMainWindow.constructor()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractMainWindow.constructor()", False, 2)
 
     def hide(self):
-        KFELog().l("KFEAbstractMainWindow.hide()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractMainWindow.hide()", False, 2)
         
     def onClose(self):
         KFELog().l("KFEAbstractMainWindow.onClose()")
@@ -53,11 +53,11 @@ class KFEAbstractMainWindow (base.aMSNMainWindow, base.aMSNWindow): # removed KF
         self.amsn_core.main_window_shown()
         
     def setMenu(self, menuBar):
-        KFELog().l("KFEAbstractMainWindow.setMenu()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractMainWindow.setMenu()", False, 2)
         
     def setTitle(self, title):
-        KFELog().l("KFEAbstractMainWindow.setTile()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractMainWindow.setTile()", False, 2)
         
     def switchToWidget(self, widget):
-        KFELog().l("KFEAbstractMainWindow.switchToWidget()\tNotImplementedError\n")
+        KFELog().l("KFEAbstractMainWindow.switchToWidget()", False, 2)
 

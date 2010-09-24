@@ -9,8 +9,8 @@ from PyQt4.QtGui    import *
 from PyQt4.QtCore   import *
 
 class KFEContactListPage (QWidget):
-    def __init__(self, contactListWidget, parent=None):
-        KFELog().l("\t\t      KFEContactListPage.__init__()")
+    def __init__(self, contactListWidget,contactListWindow, parent=None):
+        KFELog().l("KFEContactListPage.__init__()")
         QWidget.__init__(self, parent)
 
         lay = QVBoxLayout()
@@ -18,7 +18,9 @@ class KFEContactListPage (QWidget):
         myInfoLayLeft = QVBoxLayout()
 
         self.nick = KFENickEdit()
+        QObject.connect(self.nick, SIGNAL("nickChanged(QString)"), contactListWindow.onNewNickSet)
         self.psm = KFENickEdit(allowEmpty = True, emptyMessage=QString("<u>Click here to set a personal message...</u>"))
+        QObject.connect(self.psm, SIGNAL("nickChanged(QString)"), contactListWindow.onNewPsmSet)
         self.currentMedia = QLabel()
         self.presenceCombo = KFEPresenceCombo()
 
@@ -37,15 +39,16 @@ class KFEContactListPage (QWidget):
         lay.addWidget(contactListWidget)
 
         QWidget.setLayout(self, lay)
+        
 
     def onMyInfoUpdated(self, view):
-        KFELog().l("PartlyImplementedError:\t      KFEContactListPage.onMyInfoUpdated()")
+        KFELog().l("KFEContactListPage.onMyInfoUpdated()", 1)
         self.nick.setText(view.nick.to_HTML_string())
         if not QString(str(view.psm)).isEmpty(): #Think carefully: i think we can remove this if (look at KPresenceComboBox.setText()'s implementation)
             self.psm.setText(view.psm.to_HTML_string())
-        print "\t\t\t\t\tN. of personal Images:" + str(len(view.dp.imgs))
+        KFELog().d("N. of personal Images:" + str(len(view.dp.imgs)))
         if len(view.dp.imgs) > 0:
-            print "WE HAVE A DP FROM THE CORE! UPDATE THE FRONT END CODE!!"
+            KFELog().d("WE HAVE A DP FROM THE CORE! UPDATE THE FRONT END CODE!!")
         self.currentMedia.setText(view.current_media.to_HTML_string())
         #TODO: view.presence holds a string.... shouldn0t it hold a papyon.Presence?
         #self.presence_combo.setPresence(view.presence) <-- this could be used when it will hold a papyon.Presence

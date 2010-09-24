@@ -16,7 +16,7 @@ reload(sys)
 
 class KFEChatWindow (adaptationLayer.KFEAbstractChatWindow, KMainWindow):
     def constructor(self, parent=None):
-        KFELog().l("PartlyImplementedError:\t   KFEChatWindow.constructor()")
+        KFELog().l("KFEChatWindow.constructor()")
         KMainWindow.__init__(self, parent)
 
         centralWidget = QWidget()
@@ -33,7 +33,7 @@ class KFEChatWindow (adaptationLayer.KFEAbstractChatWindow, KMainWindow):
 
 
     def addChatWidget(self, chatWidget):
-        KFELog().l("PartlyImplementedError:\tKFEChatWindow.addChatWidget()")
+        KFELog().l("KFEChatWindow.addChatWidget()", False, 1)
         self.lay.addWidget(chatWidget)
         chatWidget.setStatusBar(self.sBar)
 
@@ -44,7 +44,7 @@ class KFEChatWindow (adaptationLayer.KFEAbstractChatWindow, KMainWindow):
         self.setMenuBar(menuBar)
 
     def setTitle(self, title):
-        KFELog().l("\t\tKFEChatWindow.setTitle()")
+        KFELog().l("KFEChatWindow.setTitle()")
         self.setPlainCaption(title)
 
 
@@ -52,7 +52,7 @@ class KFEChatWindow (adaptationLayer.KFEAbstractChatWindow, KMainWindow):
 class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
     #TODO: We'll probably need a SIGNAL from the contact list model, to update the contact info here.
     def constructor(self, contacts_uid, parent=None):
-        KFELog().l("PartlyImplementedError:\tKFEChatWidget.constructor()")
+        KFELog().l("KFEChatWidget.constructor()", False, 1)
         self.statusBar = None
         QWidget.__init__(self, parent)
 
@@ -108,10 +108,11 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
     def onMessageReceived(self, messageview, formatting):
         """ Called for incoming and outgoing messages
             message: a MessageView of the message"""
-        KFELog().l("PartlyImplementedError:\tKFEChatWidget.onMessageReceived() messageview ="+repr(messageview.msg))
+        KFELog().l("KFEChatWidget.onMessageReceived()", False, 1)
+        KFELog().d("messageview ="+repr(messageview.msg), "KFEChat.onMessageReceived()")
 
         messageReceived = messageview.to_stringview().parse_default_smileys()
-        KFELog().l("-->" + repr(messageReceived))
+        KFELog().d("-->" + repr(messageReceived))
         tempStr = QString("<br>")
         if formatting is not None:
             tempStr.append("<font face=\"%s\" color=\"#%s\">" % ( formatting.font, formatting.color ))
@@ -127,16 +128,16 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         
 
     def onUserJoined(self, nickname):
-        KFELog().l("\t\t\t\tKFEChatWidget.onUserJoined()")
+        KFELog().l("KFEChatWidget.onUserJoined()")
         self.appendToChat("<i>%s has joined the chat </i>"%(unicode(nickname)))
         self.statusBar.insertItem("%s has joined the chat" % (nickname), 0)
 
 
     def onNudge(self):
-        KFELog().l("NotImplementedError:\tKFEChatWidget.OnNudge()")
+        KFELog().l("KFEChatWidget.OnNudge()",False, 2)
 
     def onUserTyping(self, contact):
-        KFELog().l("\t\tKFEChatWidget.onUserTyping()")
+        KFELog().l("KFEChatWidget.onUserTyping()", False, 1)
         if self.statusBar.hasItem(1):
             self.statusBar.removeItem(1)
         self.statusBar.insertItem("%s is typing a message" % (contact), 1)

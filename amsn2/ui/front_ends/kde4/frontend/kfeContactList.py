@@ -20,27 +20,27 @@ from PyQt4.QtCore   import  *
 
 class KFEContactListWindow (adaptationLayer.KFEAbstractContactListWindow):
     def constructor(self, parent=None):
-        KFELog().l("\t\t   KFEContactListWindow.constructor()")
+        KFELog().l("KFEContactListWindow.constructor()")
         self._main_window = parent
 
         self._clwidget = KFEContactListWidget()
         QObject.connect(self._clwidget, SIGNAL("newConversationRequested(char*)"), self.onNewConversationRequested)
-        self.contactListPage = KFEContactListPage(self._clwidget)
+        self.contactListPage = KFEContactListPage(self._clwidget, self)
 
     def hide(self):
         pass
     
     def show(self):
-        KFELog().l("\t\tKFEContactListWindow.show()")
+        KFELog().l("KFEContactListWindow.show()")
         self._main_window.switchToWidget(self.contactListPage)
 
     def onMyInfoUpdated(self, view):
-        KFELog().l("\t\tKFEContactListWindow.onMyInfoUpdated()")
+        KFELog().l("KFEContactListWindow.onMyInfoUpdated()")
         self.contactListPage.onMyInfoUpdated(view)
 
 
     def getContactListWidget(self):
-        KFELog().l("\t\t\FEContactListWindow.getContactlistWidget()")
+        KFELog().l("KFEContactListWindow.getContactlistWidget()")
         return self._clwidget
 
 
@@ -49,7 +49,7 @@ class KFEContactListWindow (adaptationLayer.KFEAbstractContactListWindow):
 
 class KFEContactListWidget(adaptationLayer.KFEAbstractContactListWidget, QListView):
     def constructor(self, parent=None):
-        KFELog().l("PartlyImplementedError:\t   KFEContactListWidget.constructor()")
+        KFELog().l("KFEContactListWidget.constructor()", False, 1)
         QListView.__init__(self, parent)
 
         self.cl_model = ContactListModel(self)
@@ -60,17 +60,17 @@ class KFEContactListWidget(adaptationLayer.KFEAbstractContactListWidget, QListVi
 
 
     def onContactlistUpdated(self, clView):
-        KFELog().l("\t\tKFEContactListWidget.onContactlistUpdated()")
+        KFELog().l("KFEContactListWidget.onContactlistUpdated()")
         self.cl_model.onContactListUpdated(clView)
 
 
     def onGroupUpdated(self, groupView):
-        KFELog().l("\t\tKFEContactListWidget.onGroupUpdated()")
+        KFELog().l("KFEContactListWidget.onGroupUpdated()")
         self.cl_model.onGroupUpdated(groupView)
 
 
     def onContactUpdated(self, contactView):
-        KFELog().l("\t\tKFEContactListWidget.onContactUpdated()")
+        KFELog().l("KFEContactListWidget.onContactUpdated()")
         self.cl_model.onContactUpdated(contactView)
 
     # -------------------- QT_SLOTS
