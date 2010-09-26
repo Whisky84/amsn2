@@ -9,11 +9,14 @@ from PyKDE4.kdeui   import  KComboBox
 from PyKDE4.kdecore import  i18n
 
 from PyQt4.QtGui    import  QIcon
+from PyQt4.QtCore   import  *
 
 #Maybe we need another class which makes presence info more abstract? (a Qt Delegate?! Does KComboBox support them?)
 #TODO: put inizialization out of constructor, add setPresenceValues method.
 
 class KFEPresenceCombo(KComboBox):
+    presenceChanged = pyqtSignal(papyon.Presence)
+    
     # is passing amsn_core the best solution?
     def __init__(self, parent = None):
         KComboBox.__init__(self, parent)
@@ -36,6 +39,7 @@ class KFEPresenceCombo(KComboBox):
             self.addItem(QIcon(iconPath), self.presenceStrings[presenceKey], presenceKey)
         
         self.setPresence(papyon.Presence.ONLINE)
+        QObject.connect(self, SIGNAL("currentIndexChanged(int)"), self.onCurrentIndexChanged)
         
         
     def setPresence(self, presence):
@@ -61,4 +65,8 @@ class KFEPresenceCombo(KComboBox):
         #the personalinfoview holds a string... so this is necessary...
         #maybe this will be removed in the future... I hope...
         KComboBox.setCurrentIndex(self, index)
+        
+        
+    def onCurrentIndexChanged(index):
+        presenceChanged.emit(self.presence())
         

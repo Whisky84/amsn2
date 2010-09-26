@@ -23,18 +23,24 @@ class KFEContactListPage (QWidget):
         QObject.connect(self.psm, SIGNAL("nickChanged(QString)"), contactListWindow.onNewPsmSet)
         self.currentMedia = QLabel()
         self.presenceCombo = KFEPresenceCombo()
+        self.presenceCombo.presenceChanged.connect(contactListWindow.onNewPresenceSet)
+        #QObject.connect(self.presenceCombo, SIGNAL("presenceChanged(papyon.Presence)"), contactListWindow.onNewPresenceSet)
 
         myInfoLayLeft.addWidget(self.nick)
         myInfoLayLeft.addWidget(self.psm)
         myInfoLayLeft.addWidget(self.currentMedia)
         myInfoLayLeft.addWidget(self.presenceCombo)
-
-        dp = QLabel()
+        
+        # TODO: remove the personal info setting from here
+        self.displayPic = QLabel()
+        self.displayPic.setFrameStyle(QFrame.Box)
+        self.displayPic.setFrameShadow(QFrame.Sunken)
         path = KFEThemeManager().pathOf("dp_amsn")
-        dp.setPixmap(QPixmap(path))
-        dp.installEventFilter( DisplayPicEventFilter(dp) )
-        QObject.connect(dp, SIGNAL("clicked()"), contactListWindow.onDisplayPicChooseRequest)
-        myInfoLay.addWidget(dp)
+        self.displayPic.setPixmap(QPixmap(path))
+        self.displayPic.installEventFilter( DisplayPicEventFilter(self.displayPic) )
+        QObject.connect(self.displayPic, SIGNAL("clicked()"), contactListWindow.onDisplayPicChooseRequest)
+        
+        myInfoLay.addWidget(self.displayPic)
         myInfoLay.addLayout(myInfoLayLeft)
 
         lay.addLayout(myInfoLay)
@@ -50,7 +56,10 @@ class KFEContactListPage (QWidget):
             self.psm.setText(view.psm.to_HTML_string())
         KFELog().d("N. of personal Images:" + str(len(view.dp.imgs)))
         if len(view.dp.imgs) > 0:
-            KFELog().d("WE HAVE A DP FROM THE CORE! UPDATE THE FRONT END CODE!!")
+            KFELog().d("We have display pics, setting the first as the image shown")
+            KFELog().d(view.dp.imgs[0])
+            _, path = view.dp.imgs[0]
+            self.displayPic.setPixmap(QPixmap(path, "PNG"))
         self.currentMedia.setText(view.current_media.to_HTML_string())
         #TODO: view.presence holds a string.... shouldn0t it hold a papyon.Presence?
         #self.presence_combo.setPresence(view.presence) <-- this could be used when it will hold a papyon.Presence

@@ -41,8 +41,8 @@ class KFEDisplayPicChooser(KFileDialog, base.aMSNDPChooserWindow):
         chosenImage = KFileDialog.getImageOpenUrl(KUrl("."), aMSNCore().get_main_window(), self.title)
         #msnObject = MSNObject( string representing the account, 
         #aMSNCore()._personalinfo_manager._on_DP_changed(str(chosenImage.toString()))
-        #self.callback(str(chosenImage.path()))
-        self.callback(KFELog())
+        self.callback(str(chosenImage.path()))
+        #self.callback(KFELog())
         print repr(chosenImage)
 
 

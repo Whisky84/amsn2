@@ -36,6 +36,9 @@ class KFEAbstractContactListWindow (base.aMSNContactListWindow): # removed KFEWi
         self.amsn_core._personalinfo_manager._on_PSM_changed(str(psm))
         KFELog().d(psm, "KFEAbstractContactListWindow.onNewPsmSet()")
         
+    def onNewPresenceSet(self, presence):
+        print presence
+        
     def onNewPresenceSet(self):
         pass
 
