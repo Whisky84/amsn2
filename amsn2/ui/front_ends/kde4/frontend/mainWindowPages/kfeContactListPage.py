@@ -32,6 +32,8 @@ class KFEContactListPage (QWidget):
         dp = QLabel()
         path = KFEThemeManager().pathOf("dp_amsn")
         dp.setPixmap(QPixmap(path))
+        dp.installEventFilter( DisplayPicEventFilter(dp) )
+        QObject.connect(dp, SIGNAL("clicked()"), contactListWindow.onDisplayPicChooseRequest)
         myInfoLay.addWidget(dp)
         myInfoLay.addLayout(myInfoLayLeft)
 
@@ -52,4 +54,16 @@ class KFEContactListPage (QWidget):
         self.currentMedia.setText(view.current_media.to_HTML_string())
         #TODO: view.presence holds a string.... shouldn0t it hold a papyon.Presence?
         #self.presence_combo.setPresence(view.presence) <-- this could be used when it will hold a papyon.Presence
-        self.presenceCombo.setCurrentIndex(self.presenceCombo.findText(view.presence.capitalize())) 
+        self.presenceCombo.setCurrentIndex(self.presenceCombo.findText(view.presence.capitalize()))
+
+
+
+
+
+class DisplayPicEventFilter (QObject):
+    def eventFilter(self, label, event):
+        if event.type() == QEvent.MouseButtonRelease and event.button() == Qt.LeftButton:
+            label.emit(SIGNAL("clicked()"))
+            return True
+        else:
+            return False

@@ -15,7 +15,8 @@ from kfeAbstractUtility import  KFEAbstractErrorWindow,        \
                                 KFEAbstractGroupInputWindow,   \
                                 KFEAbstractContactDeleteWindow,\
                                 KFEAbstractGroupDeleteWindow
-
+from kfeAbstractChoosers        import  KFEFileChooser, \
+                                        KFEDisplayPicChooser
 ################
 
 from kfePresence        import  KFEPresence

@@ -38,8 +38,13 @@ class KFEAbstractContactListWindow (base.aMSNContactListWindow): # removed KFEWi
         
     def onNewPresenceSet(self):
         pass
+
+    def onDisplayPicChooseRequest(self):
+        self.amsn_core._personalinfo_manager._on_DP_change_request()
         
         
+
+
 
 class KFEAbstractContactListWidget(base.aMSNContactListWidget):
     def __init__(self, parent=None):

@@ -21,5 +21,7 @@ from amsn2.ui.front_ends.kde4.adaptationLayer    import          \
     KFEAbstractContactInputWindow   as  aMSNContactInputWindow, \
     KFEAbstractGroupInputWindow     as  aMSNGroupInputWindow,   \
     KFEAbstractContactDeleteWindow  as  aMSNContactDeleteWindow,\
-    KFEAbstractGroupDeleteWindow    as  aMSNGroupDeleteWindow
-
+    KFEAbstractGroupDeleteWindow    as  aMSNGroupDeleteWindow,  \
+                                                                \
+    KFEDisplayPicChooser            as  aMSNDPChooserWindow,  \
+    KFEFileChooser                  as  aMSNFileChooserWindow
