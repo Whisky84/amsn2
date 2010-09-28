@@ -37,10 +37,10 @@ class KFEAbstractContactListWindow (base.aMSNContactListWindow): # removed KFEWi
         KFELog().d(psm, "KFEAbstractContactListWindow.onNewPsmSet()")
         
     def onNewPresenceSet(self, presence):
-        print presence
-        
-    def onNewPresenceSet(self):
-        pass
+        #Why the core communicates the presence eith a string, WHY?!?!!? ;_________;
+        if presence in self.amsn_core.p2s.keys():
+            KFELog().d("presence: %s" % presence, "KFEAbstractContactListWindow.onNewPresenceSet()")
+            self.amsn_core._personalinfo_manager._on_presence_changed(self.amsn_core.p2s[presence])
 
     def onDisplayPicChooseRequest(self):
         self.amsn_core._personalinfo_manager._on_DP_change_request()

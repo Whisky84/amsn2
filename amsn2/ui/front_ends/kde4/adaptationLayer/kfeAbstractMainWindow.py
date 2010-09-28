@@ -17,7 +17,6 @@ class KFEAbstractMainWindow (base.aMSNMainWindow, base.aMSNWindow): # removed KF
         KFELog().l("KFEAbstractMainWindow.__init__()", True)
         self.amsn_core = amsn_core
         KFEThemeManager.setManager(self.amsn_core._theme_manager)
-        KFEPresence().setCore(self.amsn_core)
         self.constructor()
         
     #CORE SIDE INTERFACE

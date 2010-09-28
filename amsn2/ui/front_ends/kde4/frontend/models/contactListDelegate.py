@@ -1,27 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from amsn2.ui.front_ends.kde4.adaptationLayer import KFELog
+
+from contactListModel   import KFERole
+
 from amsn2.ui.front_ends.kde4.adaptationLayer import KFEThemeManager
 
-from PyQt4.QtGui    import  QApplication,           \
-                            QTextDocument,          \
-                            QItemDelegate,          \
-                            QLabel,                 \
-                            QPainter,               \
-                            QPalette,               \
-                            QPixmap,                \
-                            QStyle,                 \
-                            QStyleOptionViewItem,   \
-                            QStyleOptionViewItemV2, \
-                            QStyleOptionViewItemV4, \
-                            QStyledItemDelegate
+from PyQt4.QtGui    import  *
 
-from PyQt4.QtCore   import  QPoint,                 \
-                            QPointF,                \
-                            QRect,                  \
-                            QRectF,                 \
-                            QSize,                  \
-                            QSizeF,                 \
-                            Qt
+from PyQt4.QtCore   import  *
 
                             
 class ContactStyledDelegate (QStyledItemDelegate):
@@ -30,60 +17,81 @@ class ContactStyledDelegate (QStyledItemDelegate):
     dPS = 55.0
     # dPM = defaultPicture(Inner)Margin
     dPM = 5
+    textOptions = QTextOption()
     def __init__(self, parent):
         QStyledItemDelegate.__init__(self, parent)
         self.xyOff = QPointF(self.dPM, self.dPM)
         self.bottomRightDeltaPoint = QPointF(self.dPS, self.dPS) - self.xyOff
+        self.textOptions.setWrapMode(QTextOption.NoWrap)
         
     def paint(self, painter, option, index):
         #print "\t\t\t\tContactStyledDelegate.paint()" 
-        painter.save()
-        topLeftPoint = QPointF(option.rect.topLeft())
+        if not index.parent().isValid():
+            #KFELog().d("I'm painting a group Item", "ContactStyledDelegate.paint()")
+            QStyledItemDelegate.paint(self, painter, option, index)
+        else:
+            model = index.model()
+            painter.save()
+            topLeftPoint = QPointF(option.rect.topLeft())
+            
+            # -> Configure the painter
+            painter.setClipRect(option.rect)
+            painter.setClipping(True)
+            # -> Draw the skeleton of a ItemView widget: highlighting, selection...
+            QApplication.style().drawControl(QStyle.CE_ItemViewItem, option, painter, option.widget)
+    
+            # -> Start drawing the decoration:
+            # create the picture
+            picture = QPixmap(model.data(index, KFERole.DecorationRole))
+            # calculate the target position
+            source = QRectF( QPointF(0.0,0.0), QSizeF(picture.size()) )
+            target = QRectF( topLeftPoint + self.xyOff,
+                             topLeftPoint + self.bottomRightDeltaPoint)
+            # draw
+            painter.drawPixmap(target, picture, source)
+    
+            # -> start drawing the emblem
+            picturePath  = KFEThemeManager().pathOf("emblem_%s" % 
+                            str(model.data(index, KFERole.StatusRole).toString()))
+            picture = QPixmap(picturePath)
+            source = QRectF( QPointF(0.0,0.0), QSizeF(picture.size()) )
+            painter.drawPixmap(target, picture, source)
         
-        # -> Configure the painter
-        painter.setClipRect(option.rect)
-        painter.setClipping(True)
-        # -> Draw the skeleton of a ItemView widget: highlighting, selection...
-        QApplication.style().drawControl(QStyle.CE_ItemViewItem, option, painter, option.widget)
-
-        # -> Start drawing the decoration:
-        # create the picture
-        picture = QPixmap(index.model().data(index, Qt.DecorationRole))
-        # calculate the target position
-        source = QRectF( QPointF(0.0,0.0), QSizeF(picture.size()) )
-        target = QRectF( topLeftPoint + self.xyOff,
-                         topLeftPoint + self.bottomRightDeltaPoint)
-        # draw
-        painter.drawPixmap(target, picture, source)
-
-        # -> start drawing the emblem
-        picture = QPixmap(KFEThemeManager().pathOf("emblem_%s" %(str(index.model().data(index, Qt.UserRole+1)))))
-        source = QRectF( QPointF(0.0,0.0), QSizeF(picture.size()) )
-        painter.drawPixmap(target, picture, source)
-
-        # -> Start drawing the text:
-        # create the text 
-        text = QTextDocument()
-        text.setHtml(index.model().data(index, Qt.DisplayRole))
-        # calculate the vertical offset, to center the text vertically
-        vOff = abs(option.rect.height() - text.size().height())/2
-        # move the pointer to the text zone:
-        painter.translate(topLeftPoint + QPointF(self.dPS, vOff))
-        # draw
-        text.drawContents(painter, QRectF(QRect( QPoint(0,0), option.rect.size())))
-        # -> It's done!
-        painter.restore()
+            # -> Start drawing the text:
+            # create the text 
+            text = QTextDocument()
+            textOptions = text.defaultTextOption()
+            textOptions.setWrapMode(QTextOption.NoWrap)
+            text.setDefaultTextOption(textOptions)
+            text.setHtml(index.model().data(index, KFERole.DisplayRole).toString().replace("<i>","<br><i>"))
+            text.adjustSize()
+            # calculate the vertical offset, to center the text vertically
+            vOff = abs(option.rect.height() - text.size().height())/2
+            # move the pointer to the text zone:
+            painter.translate(topLeftPoint + QPointF(self.dPS, vOff))
+            # draw
+            text.drawContents(painter, QRectF(QRect( QPoint(0,0), option.rect.size())))
+            # -> It's done!
+            painter.restore()
         
 
     def sizeHint(self, option, index):
-        text = QTextDocument()
-        text.setHtml(index.model().data(index, Qt.DisplayRole))
-        txtSize = text.size().toSize()
-        txtWidth  = txtSize.width()
-        txtHeight = txtSize.height()
-        
-        return QSize( txtWidth,
-                      max(txtHeight, self.dPS)  )
+        if not index.parent().isValid():
+            #KFELog().d("I'm sizing a group Item", "ContactStyledDelegate.sizeHint()")
+            return QStyledItemDelegate.sizeHint(self, option, index)
+        else:
+            text = QTextDocument()
+            textOptions = text.defaultTextOption()
+            textOptions.setWrapMode(QTextOption.NoWrap)
+            text.setDefaultTextOption(textOptions)
+            text.setHtml(index.model().data(index, KFERole.DisplayRole).toString())
+            text.adjustSize()
+            txtSize = text.size().toSize()
+            txtWidth  = txtSize.width()
+            txtHeight = txtSize.height()
+            print txtHeight
+            return QSize( txtWidth,
+                          max(txtHeight*2, self.dPS)  )
         
 
 

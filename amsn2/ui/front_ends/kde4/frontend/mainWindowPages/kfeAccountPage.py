@@ -13,15 +13,9 @@ from PyKDE4.kdeui   import  KComboBox,      \
 
 from PyKDE4.kdecore import  i18n
 
-from PyQt4.QtGui    import  QCheckBox,      \
-                            QLabel,         \
-                            QVBoxLayout,    \
-                            QPixmap,        \
-                            QWidget
+from PyQt4.QtGui    import  *
 
-from PyQt4.QtCore   import  QObject,        \
-                            Qt,             \
-                            SIGNAL
+from PyQt4.QtCore   import  *
 
 
 #TODO: Consider reimplementing KFEAccountPage as a Qt state machine
@@ -34,6 +28,8 @@ class KFEAccountPage(QWidget):
         self.loginPage = loginPage
         self.accountList = None
         
+        self.installEventFilter(self)
+        
         lay = QVBoxLayout()
         
         self.displayPic = QLabel()
@@ -42,8 +38,8 @@ class KFEAccountPage(QWidget):
         self.displayPic.setPixmap(QPixmap(displayPicPath))
         self.displayPic.setAlignment(Qt.AlignCenter)
         
-        
         self.accountCombo = KComboBox()
+        self.accountCombo.setMinimumWidth(220)
         self.accountCombo.setEditable(1)
         self.accountCombo.setDuplicatesEnabled(False) #not working... why?
         self.accountCombo.setInsertPolicy(KComboBox.NoInsert)
@@ -58,28 +54,55 @@ class KFEAccountPage(QWidget):
         self.isThereSomePassword = False
         QObject.connect(self.passwordEdit, SIGNAL("textChanged(QString)"), self.onPasswordTextChanged)
         
-        self.presenceValues = KFEPresence().presenceValues()
+        self.presenceValues = KFEPresence.presenceValues()
         self.presenceCombo = KFEPresenceCombo()
         
         self.saveAccountChk = QCheckBox(i18n("Remember this account"))
         self.savePasswordChk = QCheckBox(i18n("Save password"))
         self.autoLoginChk = QCheckBox(i18n("Login automagically"))
         
-        self.loginBtn = KPushButton(i18n("Login"))
-        QObject.connect(self.loginBtn, SIGNAL("clicked()"), self.startLogin)
         
-        #lay.addWidget(self.dp_view)
+        
+        self.loginBtn = KPushButton(i18n("Login"))
+        self.loginBtn.setAutoDefault(True)
+        self.loginBtn.setMinimumWidth(110)
+        QObject.connect(self.loginBtn, SIGNAL("clicked()"), self.startLogin)
+        loginBtnLay = QHBoxLayout()
+        loginBtnLay.addStretch()
+        loginBtnLay.addWidget(self.loginBtn)
+        loginBtnLay.addStretch()
+        
+        
+        lay.addSpacing(40)
         lay.addWidget(self.displayPic)
+        lay.addSpacing(40)
         lay.addWidget(self.accountCombo)
         lay.addWidget(self.passwordEdit)
         lay.addWidget(self.presenceCombo)
+        lay.addSpacing(20)
         lay.addWidget(self.saveAccountChk)
         lay.addWidget(self.savePasswordChk)
         lay.addWidget(self.autoLoginChk)
-        lay.addWidget(self.loginBtn)
-        self.setLayout(lay)
+        lay.addSpacing(35)
+        lay.addLayout(loginBtnLay)
+        lay.addSpacing(45)
+        lay.addStretch()
         
+        horLay = QHBoxLayout()
+        horLay.addStretch()
+        horLay.addSpacing(40)
+        horLay.addLayout(lay)
+        horLay.addSpacing(40)
+        horLay.addStretch()
+        self.setLayout(horLay)
         
+    def eventFilter(self, label, event):
+        if event.type() == QEvent.KeyRelease and event.key() == Qt.Key_Return:
+            self.loginBtn.animateClick()
+            return True
+        else:
+            return False
+    
     def setAccountList(self, accountList):
         KFELog().l("KFEAccountPage.setAccountList()")
         """ This method will be called when the core needs the login window to
@@ -147,15 +170,15 @@ class KFEAccountPage(QWidget):
     def startLogin(self):
         selectedAccount = self.loginPage.getAccountFromEmail(str(self.accountCombo.currentText()))
         if selectedAccount is None:
-            KFELog().l("selectedAccount is None", "KFEAccountPage.startLogin()")
+            KFELog().d("selectedAccount is None", "KFEAccountPage.startLogin()")
             selectedAccount = kfeViews.KFEAccount(str(self.accountCombo.currentText()))
 
         selectedAccount.password = str(self.passwordEdit.text())
         selectedAccount.presence = self.presenceCombo.presence()
         selectedAccount.save = self.saveAccountChk.isChecked()
-        KFELog().l("I'm about to write savePassword", "KFEAccountPage.startLogin()")
+        KFELog().d("I'm about to write savePassword", "KFEAccountPage.startLogin()")
         selectedAccount.savePassword = self.savePasswordChk.isChecked()
-        KFELog().l("I'm about to write autoLogin", "KFEAccountPage.startLogin()")
+        KFELog().d("I'm about to write autoLogin", "KFEAccountPage.startLogin()")
         selectedAccount.autoLogin = self.autoLoginChk.isChecked()
         
         self.loginPage.onLoginRequested(selectedAccount)

@@ -15,7 +15,7 @@ from PyQt4.QtCore   import  QAbstractListModel,     \
 
 # imports for the Test class:
 
-from contactListDelegate    import  ContactStyledDelegate
+#from contactListDelegate    import  ContactStyledDelegate
 
 from PyKDE4.kdeui   import  KApplication,   \
                             KMainWindow
@@ -25,7 +25,106 @@ from PyKDE4.kdecore import  KAboutData,     \
 from PyQt4.QtGui    import  *
 import sys
 
-class ContactListModel(QAbstractListModel):
+
+class ContactListModel(QStandardItemModel):
+    sortRoleDict = {'online'  : "00",
+                    'brb'     : "10",
+                    'idle'    : "20",
+                    'away'    : "30",
+                    'phone'   : "40",
+                    'lunch'   : "50",
+                    'busy'    : "60",
+                    'offline' : "99"}
+                    
+    def __init__(self,  parent=None):
+        QStandardItemModel.__init__(self,  parent)
+        self.setSortRole(KFERole.SortRole)
+        self.__debugGroupUid = 'debug'
+        newGroupItem = QStandardItem(QString("Lost Contacts..."))
+        newGroupItem.setData(self.__debugGroupUid, KFERole.UidRole)
+        self.appendRow(newGroupItem)
+        
+    def onContactListUpdated(self, clView):
+        KFELog().l("ContactListModel.onContactListUpdated()", False,  1)
+        for groupUid in clView.group_ids:
+            newGroupItem = QStandardItem(QString(groupUid))
+            newGroupItem.setData(groupUid,  KFERole.UidRole)
+            newGroupItem.setData(QString(groupUid), KFERole.SortRole)
+            self.appendRow(newGroupItem)
+            
+    def onGroupUpdated(self, gView):
+        KFELog().l("ContactListModel.onGroupUpdated()",  False,  1)
+        groupItem = self.__searchItemByUid(gView.uid,  self)
+        groupItem.setData(gView.name.parse_default_smileys().to_HTML_string(),  KFERole.DisplayRole)
+        groupItem.setData(gView.name.to_HTML_string(), KFERole.SortRole)
+        # TODO: set the Icon. 
+        #groupItem.setData()
+        for contactUid in gView.contact_ids:
+            contactItem = self.__searchItemByUid(contactUid,  groupItem)
+            if contactItem == None:
+                newContactItem = QStandardItem(QString(contactUid))
+                newContactItem.setData(contactUid,  KFERole.UidRole)
+                groupItem.appendRow(newContactItem)
+            
+    def onContactUpdated(self, cView):
+        #KFELog().l("ContactListModel.onContactUpdated()", False, 1)
+        #searching the contact in the groups --> we will have to mantain a dict ['uid':idx]...
+        for idx in range(self.rowCount()):
+            foundContactItem = self.__searchItemByUid(cView.uid,  self.item(idx, 0))
+            if foundContactItem:
+                break
+        if not foundContactItem:
+            #KFELog().d("Unable to find: %s" % cView.uid, "ContactListModel.onContactUpdated()")
+            #temp code
+            foundContactItem = QStandardItem(QString())
+            self.__searchItemByUid(self.__debugGroupUid, self).appendRow(foundContactItem)
+        # setting DisplayRole
+        foundContactItem.setData(cView.name.parse_default_smileys().to_HTML_string(), KFERole.DisplayRole)
+        # setting.... What?!
+        #foundContactItem.setData(cView) ##????
+        # setting DecorationRole
+        _,displayPicPath = cView.dp.imgs[0]
+        if displayPicPath == "dp_nopic":
+            displayPicPath = KFEThemeManager().pathOf("dp_nopic")
+        foundContactItem.setData(QPixmap(displayPicPath).scaled(50,50),  KFERole.DecorationRole)
+        # setting SortRole
+        sortString = self.sortRoleDict[cView.status.to_HTML_string()] + cView.name.to_HTML_string()
+        foundContactItem.setData(sortString, KFERole.SortRole)
+        # setting StatusRole
+        foundContactItem.setData(cView.status.to_HTML_string(),  KFERole.StatusRole)
+        
+        self.sort(0)
+        
+        
+    def __searchItemByUid(self,  uid,  parent):
+        if parent == self:
+            itemLocator = parent.item
+        else:
+            itemLocator = parent.child
+            
+        nRows = parent.rowCount()
+        for i in range(nRows):
+            foundItem = itemLocator(i,  0)
+            foundUid = foundItem.data(KFERole.UidRole).toString()
+            #str(uid) is necessary because gid "0" is passed as a int.... -_-;
+            if foundUid == QString(str(uid)).trimmed():
+                #KFELog().d("ItemFound!",  "ContactListModel.__searchItemByUid()")
+                return foundItem
+        return None
+
+
+class KFERole:
+    DisplayRole     = Qt.DisplayRole
+    DecorationRole  = Qt.DecorationRole
+    UidRole         = Qt.UserRole
+    SortRole        = Qt.UserRole + 1
+    StatusRole      = Qt.UserRole + 2 
+    
+    
+    
+    
+    
+class ContactListModelOld(QAbstractListModel):
 
     def __init__(self, parent = None):
         QAbstractListModel.__init__(self, parent)
@@ -77,7 +176,11 @@ class ContactListModel(QAbstractListModel):
 
     def onContactListUpdated(self, clView):
         KFELog().l("ContactListModel.onContactListUpdated()", 1)
-
+        KFELog().d("clView: %d" % len(clView.group_ids))
+        
+        for i in clView.group_ids:
+            KFELog().d(str(i))
+            
 
     def onContactUpdated(self, contact):
         KFELog().l("ContactListModel.contact_updated()")

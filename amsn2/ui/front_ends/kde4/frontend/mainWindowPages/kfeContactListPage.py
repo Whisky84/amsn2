@@ -24,7 +24,6 @@ class KFEContactListPage (QWidget):
         self.currentMedia = QLabel()
         self.presenceCombo = KFEPresenceCombo()
         self.presenceCombo.presenceChanged.connect(contactListWindow.onNewPresenceSet)
-        #QObject.connect(self.presenceCombo, SIGNAL("presenceChanged(papyon.Presence)"), contactListWindow.onNewPresenceSet)
 
         myInfoLayLeft.addWidget(self.nick)
         myInfoLayLeft.addWidget(self.psm)

@@ -9,25 +9,27 @@ from amsn2.views import AccountView,    \
 from amsn2.core import  aMSNCore
 
                         
-class KFEAccount(AccountView):
+class KFEAccount (object, AccountView):
     def __init__(self, email):
         AccountView.__init__(self, aMSNCore(), email)
+        object.__init__(self)
 
     def getAutoLogin(self):
         KFELog().l("\t\tKFEAccount.getAutoLogin()")
         return self.autologin
 
-    def setAutoLogin(self, bool):
+    def setAutoLogin(self, autoLogin):
         KFELog().l("\t\tKFEAccount.setAutoLogin()")
-        self.autologin = bool
-        
+        self.autologin = autoLogin
+    
+    
+    
     def getSavePassword(self):
         KFELog().l("\t\tKFEAccount.getSavePassword()")
         return self.save_password
-        
-    def setSavePassword(self, bool):
+    def setSavePassword(self, savePassword):
         KFELog().l("\t\tKFEAccount.setSavePassword()")
-        self.save_password = bool
+        self.save_password = savePassword
 
     autoLogin = property(getAutoLogin, setAutoLogin)
     savePassword = property(getSavePassword, setSavePassword)

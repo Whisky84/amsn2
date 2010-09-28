@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from amsn2.ui.front_ends.kde4.adaptationLayer import    KFELog
+
 from amsn2.ui.front_ends.kde4.adaptationLayer import    KFEPresence,        \
                                                         KFEThemeManager
 import papyon
@@ -15,7 +17,7 @@ from PyQt4.QtCore   import  *
 #TODO: put inizialization out of constructor, add setPresenceValues method.
 
 class KFEPresenceCombo(KComboBox):
-    presenceChanged = pyqtSignal(papyon.Presence)
+    presenceChanged = pyqtSignal(basestring) #papyon.Presence is an enumeration of strings
     
     # is passing amsn_core the best solution?
     def __init__(self, parent = None):
@@ -23,7 +25,7 @@ class KFEPresenceCombo(KComboBox):
         
         #TODO: watch carefully for core changes :P
         self.presenceStrings = {}
-        self.presenceValues = KFEPresence().presenceValues()
+        self.presenceValues = KFEPresence.presenceValues()
         
         for presenceKey in self.presenceValues:
             self.presenceStrings[presenceKey] = i18n( self.presenceValues[presenceKey].capitalize() )
@@ -60,13 +62,16 @@ class KFEPresenceCombo(KComboBox):
     # -------------------- QT_OVERLOAD
     
     def setCurrentIndex(self, index):
-        print "Oh, boy.... what an ugly way to set the displayed presence!"
-        print "Come on, use setPresence() instead! :("
+        
+        KFELog().d("Oh, boy.... what an ugly way to set the displayed presence!<br>\
+                    Come on, use setPresence() instead! :(", "KFEPresenceCombo.setCurrentIndex()")
         #the personalinfoview holds a string... so this is necessary...
         #maybe this will be removed in the future... I hope...
         KComboBox.setCurrentIndex(self, index)
         
         
-    def onCurrentIndexChanged(index):
-        presenceChanged.emit(self.presence())
+    def onCurrentIndexChanged(self, index):
+        self.presenceChanged.emit(
+            str(   self.itemData( self.currentIndex() ).toPyObject()   )
+        )
         

@@ -47,20 +47,26 @@ class KFEContactListWindow (adaptationLayer.KFEAbstractContactListWindow):
 
 
 
-class KFEContactListWidget(adaptationLayer.KFEAbstractContactListWidget, QListView):
+class KFEContactListWidget(adaptationLayer.KFEAbstractContactListWidget, QTreeView):
     def constructor(self, parent=None):
-        KFELog().l("KFEContactListWidget.constructor()", False, 1)
+        KFELog().l("KFEContactListWidget.constructor()")
         QListView.__init__(self, parent)
 
         self.cl_model = ContactListModel(self)
         self.setModel(self.cl_model)
         self.setItemDelegate(ContactStyledDelegate(self))
-
+        self.setAnimated(True)
+        self.setHeaderHidden(True)
+        self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.setSortingEnabled(True)
+        #self.setIndentation(0)
         QObject.connect(self, SIGNAL("doubleClicked(const QModelIndex&)"), self.onItemDoubleClicked)
 
-
-    def onContactlistUpdated(self, clView):
-        KFELog().l("KFEContactListWidget.onContactlistUpdated()")
+    def edit(self, index, trigger, event):
+        return False
+        
+    def onContactListUpdated(self, clView):
+        KFELog().l("KFEContactListWidget.onContactListUpdated()")
         self.cl_model.onContactListUpdated(clView)
 
 
@@ -70,7 +76,7 @@ class KFEContactListWidget(adaptationLayer.KFEAbstractContactListWidget, QListVi
 
 
     def onContactUpdated(self, contactView):
-        KFELog().l("KFEContactListWidget.onContactUpdated()")
+        #KFELog().l("KFEContactListWidget.onContactUpdated()")
         self.cl_model.onContactUpdated(contactView)
 
     # -------------------- QT_SLOTS
