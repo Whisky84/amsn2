@@ -111,13 +111,42 @@ function changeMe()
   $('changemebuttons').setStyle({position: 'absolute', bottom: '10px', left: '25px'});
 }
 
+function setPresence(p)
+{
+  var sL = $('presenceList');
+  sL.hide();
+
+  new Ajax.Request('/changePresence',
+    {parameters:
+      {p: p}
+  });
+}
+
+function presenceList()
+{
+  var sL = $('presenceList');
+  if(sL.visible()) {
+    sL.hide();
+    if(sL.style.zIndex > Windows.maxZIndex) Windows.maxZIndex = sL.style.zIndex;
+  } else {
+    pw = $('pw');
+    cl = g_mainWindow.getElement();
+    sL.setStyle({left: parseInt(cl.getStyle('left'))+pw.offsetLeft+'px',
+                 top:  parseInt(cl.getStyle('bottom'))+pw.offsetTop+'px',
+                 zIndex: Windows.maxZIndex + 20,
+                 display: 'block'});
+    sL.show();
+    sL.setStyle({display: 'block'});
+  }
+}
+
 function PersonalWidget(_parent)
 {
   var parent = _parent;
 
   parent.update('<a href="#" id="pw_nick" onclick="changeMe();">Nick: </a><br/>'
                 +'<a href="#" id="pw_psm" onclick="changeMe();">Msg: </a><br/>'
-                +'<a href="#" id="pw_presence">Presence: </a>');
+                +'<a href="#" id="pw_presence" onclick="presenceList();">Presence: </a>');
 
   this.remove = function() {
     parent.update();
@@ -748,7 +777,7 @@ function aMSNStart()
         console.log(e);
       }
     });
-  }, 0.5);
+  }, 5);
   Event.observe(window, 'beforeunload', function(event) {
     if (!logoutCb()) {
       event.stop();
