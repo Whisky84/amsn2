@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from amsn2.ui import base
-from amsn2.core.views import AccountView, ImageView
+from amsn2.views import AccountView, ImageView
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -57,36 +57,34 @@ class aMSNLoginWindow(StyledWidget, base.aMSNLoginWindow):
         self._parent = parent
         self.loginThrobber = None
         QObject.connect(self.ui.pushSignIn, SIGNAL("clicked()"), self.__login_clicked)
+        QObject.connect(self.ui.linePassword, SIGNAL("returnPressed()"), self.__login_clicked)
         QObject.connect(self.ui.styleDesktop, SIGNAL("clicked()"), self.setTestStyle)
         QObject.connect(self.ui.styleRounded, SIGNAL("clicked()"), self.setTestStyle)
         QObject.connect(self.ui.styleWLM, SIGNAL("clicked()"), self.setTestStyle)
         QObject.connect(self.ui.checkRememberMe, SIGNAL("toggled(bool)"), self.__on_toggled_cb)
         QObject.connect(self.ui.checkRememberPass, SIGNAL("toggled(bool)"), self.__on_toggled_cb)
         QObject.connect(self.ui.checkSignInAuto, SIGNAL("toggled(bool)"), self.__on_toggled_cb)
+        QObject.connect(self.ui.comboAccount, SIGNAL("currentIndexChanged(QString)"), self.__on_user_comboxEntry_changed)
         self.setTestStyle()
 
         # status list
-        self.status_values = {}
-        self.status_dict = {}
-        status_n = 0
         for key in self._amsn_core.p2s:
             name = self._amsn_core.p2s[key]
             _, path = self._theme_manager.get_statusicon("buddy_%s" % name)
-            if (name == self._amsn_core.Presence.OFFLINE): continue
-            self.status_values[key] = status_n
-            self.status_dict[str.capitalize(name)] = key
-            status_n = status_n +1
-            icon = QIcon(path)
-            self.ui.comboStatus.addItem(icon, str.capitalize(name))
+            if (name == self._amsn_core.p2s['FLN']): continue
+            self.ui.comboStatus.addItem(QIcon(path), str.capitalize(name), key)
+
+    def __on_user_comboxEntry_changed(self, text):
+        self.__switch_to_account(text)
 
     def setTestStyle(self):
         styleData = QFile()
         if self.ui.styleDesktop.isChecked() == True:
-            styleData.setFileName("amsn2/gui/front_ends/qt4/style0.qss")
+            styleData.setFileName("amsn2/ui/front_ends/qt4/style0.qss")
         elif self.ui.styleWLM.isChecked() == True:
-            styleData.setFileName("amsn2/gui/front_ends/qt4/style1.qss")
+            styleData.setFileName("amsn2/ui/front_ends/qt4/style1.qss")
         elif self.ui.styleRounded.isChecked() == True:
-            styleData.setFileName("amsn2/gui/front_ends/qt4/style2.qss")
+            styleData.setFileName("amsn2/ui/front_ends/qt4/style2.qss")
         if styleData.open(QIODevice.ReadOnly|QIODevice.Text):
             styleReader = QTextStream(styleData)
             self.setStyleSheet(styleReader.readAll())
@@ -109,17 +107,17 @@ class aMSNLoginWindow(StyledWidget, base.aMSNLoginWindow):
             self.__switch_to_account(self._account_views[0].email)
 
             if self._account_views[0].autologin:
-                self.signin()
+                self.signing_in()
 
 
     def __switch_to_account(self, email):
 
-        accv = self._ui_manager.getAccountViewFromEmail(email)
+        accv = self._ui_manager.get_accountview_from_email(email)
 
         if accv is None:
             accv = AccountView(self._amsn_core, email)
 
-        self.ui.comboAccount.setItemText(0, accv.email)
+        self.ui.comboAccount.setEditText(accv.email)
 
         if accv.password:
             self.ui.linePassword.clear()
@@ -130,25 +128,25 @@ class aMSNLoginWindow(StyledWidget, base.aMSNLoginWindow):
         self.ui.checkSignInAuto.setChecked(accv.autologin)
 
     def __login_clicked(self):
-        email = self.ui.comboAccount.currentText()
-        accv = self._ui_manager.getAccountViewFromEmail(email)
+        email = str(self.ui.comboAccount.currentText())
+        accv = self._ui_manager.get_accountview_from_email(email)
 
         if accv is None:
             accv = AccountView(self._amsn_core, str(email))
 
         accv.password = self.ui.linePassword.text().toLatin1().data()
-        accv.presence = self.status_dict[str(self.ui.comboStatus.currentText())]
+        accv.presence = str(self.ui.comboStatus.itemData(self.ui.comboStatus.currentIndex()).toString())
 
         accv.save = self.ui.checkRememberMe.isChecked()
         accv.save_password = self.ui.checkRememberPass.isChecked()
         accv.autologin = self.ui.checkSignInAuto.isChecked()
-
-        self._amsn_core.signin_to_accoun_aa(self, accv)
+        print accv
+        self._amsn_core.signin_to_account(self, accv)
 
     def signout(self):
         pass
 
-    def signin(self):
+    def signing_in(self):
         self.loginThrobber = LoginThrobber(self)
         self._parent.fadeIn(self.loginThrobber)
 
@@ -157,7 +155,7 @@ class aMSNLoginWindow(StyledWidget, base.aMSNLoginWindow):
 
     def __on_toggled_cb(self, bool):
         email = str(self.ui.comboAccount.currentText())
-        accv = self._ui_manager.getAccountViewFromEmail(email)
+        accv = self._ui_manager.get_accountview_from_email(email)
 
         if accv is None:
             accv = AccountView(self._amsn_core, email)

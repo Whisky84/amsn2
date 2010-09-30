@@ -20,7 +20,7 @@
 
 from amsn2.protocol.events import conversation
 from amsn2.core.contactlist_manager import *
-from amsn2.core.views import *
+from amsn2.views import *
 import papyon
 
 class aMSNConversation:
@@ -33,7 +33,7 @@ class aMSNConversation:
         """
 
         if (contacts_uid is None):
-            raise ValueError, InvalidArgument
+            raise InvalidArgument
 
         self._core = core
         self._conversation_manager = conv_manager
@@ -53,6 +53,14 @@ class aMSNConversation:
         self._conv_widget = core._ui_manager.load_chat_widget(self, self._win, contacts_uid)
         self._win.add_chat_widget(self._conv_widget)
         self._win.show()
+        if contacts_uid:
+            if len(contacts_uid) > 1:
+                self._win.set_title("aMSN2 - Multi Chat")
+            else:
+                c = self._core._contactlist_manager.get_contact(contacts_uid[0])
+                self._win.set_title("Chat with " + unicode(c.nickname))
+        else:
+            self._win.set_title("aMSN2 - Chat")
 
 
     """ events from outside """
@@ -95,7 +103,7 @@ class aMSNConversation:
         """ msg is a StringView """
         # for the moment, no smiley substitution... (TODO)
         self.on_message_received(msg, formatting=formatting)
-        message = papyon.ConversationMessage(str(msg), formatting)
+        message = papyon.ConversationMessage(unicode(msg), formatting)
         self._conv.send_text_message(message)
 
     def send_nudge(self):
@@ -110,6 +118,6 @@ class aMSNConversation:
     def invite_contact(self, contact_uid):
         """ contact_uid is the Id of the contact to invite """
         c = self._core._contactlist_manager.get_contact(contact_uid)
-        self._conv.invite_user(contact.papyon_contact)
+        self._conv.invite_user(c.papyon_contact)
 
     #TODO: ...

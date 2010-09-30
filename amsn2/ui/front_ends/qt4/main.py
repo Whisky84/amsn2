@@ -23,7 +23,9 @@ from amsn2.ui import base
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from fadingwidget import FadingWidget
-from amsn2.core.views import MenuView, MenuItemView
+from amsn2.views import MenuView, MenuItemView
+
+import common
 
 class aMSNMainWindow(QMainWindow, base.aMSNMainWindow):
     def __init__(self, amsn_core, parent=None):
@@ -82,11 +84,7 @@ class aMSNMainWindow(QMainWindow, base.aMSNMainWindow):
 
     def set_menu(self, menu):
         mb = QMenuBar()
-
-        for item in menu.items:
-            if item.type == "cascade":
-                menu = mb.addMenu(item.label)
-                for subitem in item.items:
-                    menu.addAction(subitem.label)
-
+        
+        common.create_menu_items_from_view(mb, menu.items)
+        
         self.setMenuBar(mb)

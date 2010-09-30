@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>aMSN2 Web FrontEnd</title>
+    <script type="text/javascript" src="static/js/prototype.js"></script>
+    <script type="text/javascript" src="static/js/effects.js"></script>
+    <script type="text/javascript" src="static/js/window.js"></script>
+    <style type="text/css">
+      @import url("static/amsn2.css");
+    </style>
+    <script type="text/javascript" src="static/js/amsn2.js"></script>
+  </head>
+  <body>
+    <div id="info"></div>
+    <div id="error"></div>
+    <div id="debug"></div>
+    <div id="login" style="display:none">
+      <form id="signin" action="/signin">
+      Username:<input name="username" type="text" /> <br/>
+      Password:<input name="password" type="password" /> <br/>
+      <input type="submit" value="Sign In!" />
+      </form>
+    </div>
+    <pre id="message">
+              &nbsp;
+    </pre>
+
+
+<div class="itemList" id="presenceList">
+  <a href="#" onclick="setPresence('NLN');return false;">
+    <img src="static/images/icons/online.png" style="border:0;" alt="" title="" />
+    &nbsp;&nbsp;I'm available
+  </a>
+  <a href="#" style="border-bottom: 1px solid #bfbcb8;"
+    onclick="setPresence('IDL');return false;">
+    <img src="static/images/icons/idle.png" style="border:0;" alt="" title="" />
+    &nbsp;&nbsp;I'm idle
+  </a>
+
+  <a href="#" onclick="setPresence('BSY');return false;">
+    <img src="static/images/icons/busy.png" style="border:0;" alt="" title="" />
+    &nbsp;&nbsp;I'm busy
+  </a>
+  <a href="#" onclick="setPresence('LUN');return false;">
+    <img src="static/images/icons/lunch.png" style="border:0;" alt="" title="" />
+    &nbsp;&nbsp;I'm having lunch
+  </a>
+  <a href="#" style="border-bottom: 1px solid #bfbcb8;"
+    onclick="setPresence('PHN');return false;">
+    <img src="static/images/icons/phone.png" style="border:0;" alt="" title="" />
+    &nbsp;&nbsp;I'm on phone
+  </a>
+
+  <a href="#" onclick="setPresence('AWY');return false;">
+    <img src="static/images/icons/away.png" style="border:0;" alt="" title="" />
+    &nbsp;&nbsp;I'm away
+  </a>
+  <a href="#" style="border-bottom: 1px solid #bfbcb8;"
+    onclick="setPresence('BRB');return false;">
+    <img src="static/images/icons/brb.png" style="border:0;" alt="" title="" />
+    &nbsp;&nbsp;I'll be right back
+  </a>
+
+  <a href="#" onclick="setPresence('HDN');return false;">
+    <img src="static/images/icons/hidden.png" style="border:0;" alt="" title="" />
+    &nbsp;&nbsp;I'm invisible
+  </a>
+</div>
+
+    <script type="text/javascript">
+      $('presenceList').hide();
+
+      function recenterLogin(event) {
+        var login = $('login');
+        var top = (document.viewport.getHeight() - login.getHeight())/2;
+        var left = (document.viewport.getWidth() - login.getWidth())/2;
+
+        login.setStyle({top: top + 'px', left: left + 'px', display: 'block'});
+        login.show();
+      }
+      Event.observe(window, 'resize', recenterLogin);
+      recenterLogin(null);
+
+      Event.observe('signin', 'submit', function(event) {
+        event.stop();
+        $('signin').request({
+          onComplete: function(){ aMSNStart(); }
+        });
+      });
+
+    </script>
+  </body>
+</html>
