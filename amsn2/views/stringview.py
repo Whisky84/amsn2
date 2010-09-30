@@ -152,9 +152,7 @@ class StringView (object):
                     finished = False
                     text = element.get_value()
                     while (finished == False): 
-                        pos = text.find(shortcut)
-                        if (pos == -1):
-                            pos = text.upper().find(shortcut)
+                        pos = text.lower().find(shortcut.lower())
                         if (pos == -1):
                             finished = True
                             temp_stringview.append_text(text)
