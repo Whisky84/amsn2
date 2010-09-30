@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Tasks SYSTEM "Tasks-4.2.dtd">
 <!-- eric4 tasks file for project KDE4 fe -->
-<!-- Saved: 2010-09-28, 20:13:30 -->
+<!-- Saved: 2010-09-29, 03:48:07 -->
 <Tasks version="4.2">
   <Task priority="1" completed="False" bugfix="False">
     <Summary>TODO: remove the personal info setting from here</Summary>
@@ -33,7 +33,7 @@
   <Task priority="1" completed="False" bugfix="False">
     <Summary>TODO: Consider reimplementing KFEAccountPage as a Qt state machine</Summary>
     <Description></Description>
-    <Created>2010-09-28, 05:04:18</Created>
+    <Created>2010-09-28, 20:17:03</Created>
     <Resource>
       <Filename>frontend/mainWindowPages/kfeAccountPage.py</Filename>
       <Linenumber>21</Linenumber>
@@ -42,7 +42,7 @@
   <Task priority="1" completed="False" bugfix="False">
     <Summary>TODO: Check signal propagation - loop risk!</Summary>
     <Description></Description>
-    <Created>2010-09-28, 05:04:18</Created>
+    <Created>2010-09-28, 20:17:03</Created>
     <Resource>
       <Filename>frontend/mainWindowPages/kfeAccountPage.py</Filename>
       <Linenumber>48</Linenumber>

@@ -22,10 +22,10 @@ class KFESigningInPage (QWidget):
         self.progressMessage = QLabel("")
         self.progressMessage.setAlignment(Qt.AlignCenter)
         throbber = QLabel()
-        movie = QMovie("amsn2/ui/front_ends/kde4/throbber.gif")
-        print "movie valid %s" % movie.isValid()
-        throbber.setMovie(movie)
-        movie.start()
+        self.movie = QMovie("amsn2/ui/front_ends/kde4/throbber.gif")
+        throbber.setAlignment(Qt.AlignCenter)
+        throbber.setMovie(self.movie)
+        self.movieStarted = False
         
         hpLay.addStretch()
         hpLay.addWidget(self.progressBar)
@@ -48,5 +48,7 @@ class KFESigningInPage (QWidget):
 
     def onConnecting(self, progress, message):
         KFELog().l("KFESigningInPage.onConnecting()")
+        if not self.movieStarted:
+            self.movie.start()
         self.progressBar.setValue(progress * 100)
         self.progressMessage.setText(message)

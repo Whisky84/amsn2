@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-from amsn2.ui.front_ends.kde4.frontend.widgets  import  KFEPresenceCombo,   \
+from amsn2.ui.front_ends.kde4.frontend.widgets  import  KFEDisplayPic,      \
+                                                        KFEPresenceCombo,   \
                                                         KFENickEdit
-from amsn2.ui.front_ends.kde4.adaptationLayer   import  KFEThemeManager, KFELog
+from amsn2.ui.front_ends.kde4.adaptationLayer   import  KFELog
 
+from PyKDE4.kdeui   import *
 from PyQt4.QtGui    import *
 from PyQt4.QtCore   import *
 
@@ -31,12 +33,13 @@ class KFEContactListPage (QWidget):
         myInfoLayLeft.addWidget(self.presenceCombo)
         
         # TODO: remove the personal info setting from here
-        self.displayPic = QLabel()
-        self.displayPic.setFrameStyle(QFrame.Box)
-        self.displayPic.setFrameShadow(QFrame.Sunken)
-        path = KFEThemeManager().pathOf("dp_amsn")
-        self.displayPic.setPixmap(QPixmap(path))
-        self.displayPic.installEventFilter( DisplayPicEventFilter(self.displayPic) )
+        self.displayPic = KFEDisplayPic()
+#        self.displayPic.setFrameStyle(QFrame.StyledPanel)
+#        self.displayPic.setFrameShadow(QFrame.Raised)
+#        path = KFEThemeManager().pathOf("dp_amsn")
+#        self.displayPic.setPixmap(QPixmap(path).scaled(96, 96))
+#        self.displayPic.setMinimumSize(104, 104)
+#        self.displayPic.installEventFilter( DisplayPicEventFilter(self.displayPic) )
         QObject.connect(self.displayPic, SIGNAL("clicked()"), contactListWindow.onDisplayPicChooseRequest)
         
         myInfoLay.addWidget(self.displayPic)
@@ -58,7 +61,7 @@ class KFEContactListPage (QWidget):
             KFELog().d("We have display pics, setting the first as the image shown")
             KFELog().d(view.dp.imgs[0])
             _, path = view.dp.imgs[0]
-            self.displayPic.setPixmap(QPixmap(path, "PNG"))
+            self.displayPic.setDisplayPic(path)
         self.currentMedia.setText(view.current_media.to_HTML_string())
         #TODO: view.presence holds a string.... shouldn0t it hold a papyon.Presence?
         #self.presence_combo.setPresence(view.presence) <-- this could be used when it will hold a papyon.Presence
@@ -68,10 +71,4 @@ class KFEContactListPage (QWidget):
 
 
 
-class DisplayPicEventFilter (QObject):
-    def eventFilter(self, label, event):
-        if event.type() == QEvent.MouseButtonRelease and event.button() == Qt.LeftButton:
-            label.emit(SIGNAL("clicked()"))
-            return True
-        else:
-            return False
+

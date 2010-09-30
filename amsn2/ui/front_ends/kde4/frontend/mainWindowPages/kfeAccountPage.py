@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from amsn2.ui.front_ends.kde4.frontend.widgets  import  KFEPresenceCombo
+from amsn2.ui.front_ends.kde4.frontend.widgets  import  KFEDisplayPic,      \
+                                                        KFEPresenceCombo
 
 from amsn2.ui.front_ends.kde4.adaptationLayer   import  kfeViews, KFELog
-from amsn2.ui.front_ends.kde4.adaptationLayer   import  KFEPresence,    \
-                                                        KFEThemeManager
+from amsn2.ui.front_ends.kde4.adaptationLayer   import  KFEPresence
+
 import papyon
 
 from PyKDE4.kdeui   import  KComboBox,      \
@@ -32,11 +33,8 @@ class KFEAccountPage(QWidget):
         
         lay = QVBoxLayout()
         
-        self.displayPic = QLabel()
-        themeManager = KFEThemeManager()
-        displayPicPath = themeManager.pathOf("dp_amsn")
-        self.displayPic.setPixmap(QPixmap(displayPicPath))
-        self.displayPic.setAlignment(Qt.AlignCenter)
+        self.displayPic = KFEDisplayPic()
+        self.displayPic.setClickable(False)
         
         self.accountCombo = KComboBox()
         self.accountCombo.setMinimumWidth(220)
@@ -61,20 +59,14 @@ class KFEAccountPage(QWidget):
         self.savePasswordChk = QCheckBox(i18n("Save password"))
         self.autoLoginChk = QCheckBox(i18n("Login automagically"))
         
-        
-        
         self.loginBtn = KPushButton(i18n("Login"))
         self.loginBtn.setAutoDefault(True)
         self.loginBtn.setMinimumWidth(110)
         QObject.connect(self.loginBtn, SIGNAL("clicked()"), self.startLogin)
-        loginBtnLay = QHBoxLayout()
-        loginBtnLay.addStretch()
-        loginBtnLay.addWidget(self.loginBtn)
-        loginBtnLay.addStretch()
         
         
         lay.addSpacing(40)
-        lay.addWidget(self.displayPic)
+        lay.addWidget(self.displayPic, 0, Qt.AlignCenter)
         lay.addSpacing(40)
         lay.addWidget(self.accountCombo)
         lay.addWidget(self.passwordEdit)
@@ -84,7 +76,7 @@ class KFEAccountPage(QWidget):
         lay.addWidget(self.savePasswordChk)
         lay.addWidget(self.autoLoginChk)
         lay.addSpacing(35)
-        lay.addLayout(loginBtnLay)
+        lay.addWidget(self.loginBtn, 0, Qt.AlignCenter)
         lay.addSpacing(45)
         lay.addStretch()
         

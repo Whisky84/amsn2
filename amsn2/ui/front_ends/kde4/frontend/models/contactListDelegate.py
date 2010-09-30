@@ -57,20 +57,19 @@ class ContactStyledDelegate (QStyledItemDelegate):
             source = QRectF( QPointF(0.0,0.0), QSizeF(picture.size()) )
             painter.drawPixmap(target, picture, source)
         
-            # -> Start drawing the text:
-            # create the text 
-            text = QTextDocument()
-            textOptions = text.defaultTextOption()
-            textOptions.setWrapMode(QTextOption.NoWrap)
-            text.setDefaultTextOption(textOptions)
-            text.setHtml(index.model().data(index, KFERole.DisplayRole).toString().replace("<i>","<br><i>"))
-            text.adjustSize()
-            # calculate the vertical offset, to center the text vertically
-            vOff = abs(option.rect.height() - text.size().height())/2
-            # move the pointer to the text zone:
+            # -> Start drawing the txtWidget:
+            # create the txtWidget 
+            txtWidget = QTextDocument()
+            txt = model.data(index, KFERole.DisplayRole).toString()
+            txt = txt.replace("<i>", "<br>,<i>")
+            txt = txt.replace("<img src", '<img width="17" height="17" src')
+            txtWidget.setHtml(index.model().data(index, KFERole.DisplayRole).toString().replace("<i>","<br><i>"))
+            # calculate the vertical offset, to center the txtWidget vertically
+            vOff = abs(option.rect.height() - txtWidget.size().height())/2
+            # move the pointer to the txtWidget zone:
             painter.translate(topLeftPoint + QPointF(self.dPS, vOff))
             # draw
-            text.drawContents(painter, QRectF(QRect( QPoint(0,0), option.rect.size())))
+            txtWidget.drawContents(painter, QRectF(QRect( QPoint(0,0), option.rect.size())))
             # -> It's done!
             painter.restore()
         
@@ -80,18 +79,13 @@ class ContactStyledDelegate (QStyledItemDelegate):
             #KFELog().d("I'm sizing a group Item", "ContactStyledDelegate.sizeHint()")
             return QStyledItemDelegate.sizeHint(self, option, index)
         else:
-            text = QTextDocument()
-            textOptions = text.defaultTextOption()
-            textOptions.setWrapMode(QTextOption.NoWrap)
-            text.setDefaultTextOption(textOptions)
-            text.setHtml(index.model().data(index, KFERole.DisplayRole).toString())
-            text.adjustSize()
-            txtSize = text.size().toSize()
+            txtWidget = QTextDocument()
+            txtWidget.setHtml(index.model().data(index, KFERole.DisplayRole).toString().replace("<i>","<br><i>"))
+            txtSize = txtWidget.size().toSize()
             txtWidth  = txtSize.width()
             txtHeight = txtSize.height()
-            print txtHeight
             return QSize( txtWidth,
-                          max(txtHeight*2, self.dPS)  )
+                          max(txtHeight, self.dPS)  )
         
 
 

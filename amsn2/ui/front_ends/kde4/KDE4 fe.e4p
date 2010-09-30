@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project KDE4 fe -->
-<!-- Saved: 2010-09-27, 14:27:07 -->
+<!-- Saved: 2010-09-30, 12:00:50 -->
 <!-- Copyright (C) 2010 ,  -->
 <Project version="4.6">
   <Language>en</Language>
@@ -78,6 +78,7 @@
     <Source>adaptationLayer/kfeSplashScreen.py</Source>
     <Source>adaptationLayer/kfeAbstractLogin.py</Source>
     <Source>kde4frontend.py</Source>
+    <Source>frontend/widgets/kfeDisplayPic.py</Source>
   </Sources>
   <Forms>
     <Form>oldStuff/models/blah.ui</Form>
