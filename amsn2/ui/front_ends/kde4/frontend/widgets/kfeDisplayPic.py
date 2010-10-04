@@ -13,15 +13,20 @@ class KFEDisplayPic (QLabel):
     def __init__(self, parent = None):
         QLabel.__init__(self, parent)
         self.__clickable = True
+        self.mask = QBitmap("amsn2/ui/front_ends/kde4/mask.bmp")
         self.setFrameStyle(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Raised)
         path = KFEThemeManager().pathOf("dp_amsn")
-        self.setDisplayPic(path)
+        pixmap = QPixmap(path)
+        pixmap.setMask(self.mask)
+        self.setDisplayPic(pixmap)
         self.installEventFilter( DisplayPicEventFilter(self) )
         
         
     def setDisplayPic(self, path):
-        self.setPixmap(QPixmap(path).scaled(self.PIXMAPSIZE))
+        pixmap = QPixmap(path)
+        pixmap.setMask(self.mask)
+        self.setPixmap(pixmap.scaled(self.PIXMAPSIZE))
         self.adjustSize()
         
     def setClickable(self, clickable):

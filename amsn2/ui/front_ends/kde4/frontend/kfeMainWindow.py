@@ -11,6 +11,8 @@ class KFEMainWindow (adaptationLayer.KFEAbstractMainWindow, KMainWindow):
     def constructor(self):
         KFELog().l("KFEMainWindow.constructor()")
         KMainWindow.__init__(self)
+        self.setObjectName("mainwindow")
+        
         self.setWindowIcon(KIcon("im-user"))
         self.widgetStack = QStackedWidget()
         self.setCentralWidget(self.widgetStack)
@@ -36,7 +38,7 @@ class KFEMainWindow (adaptationLayer.KFEAbstractMainWindow, KMainWindow):
         self.widgetStack.setCurrentIndex(index)
 
 
-# -------------------- QT_OVERLOAD
+# -------------------- QT_OVERRIDE
     def closeEvent(self, event):
         KFELog().l("KFEMainWindow.closeEvent()")
         event.accept()

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from mainWindowPages    import  KFEContactListPage
-from models             import  ContactDelegate,        \
-                                ContactListModel,       \
+from models             import  ContactListModel,       \
                                 ContactStyledDelegate
+                                
+from models.contactListModel import KFERole
                                 
 
 from amsn2.ui.front_ends.kde4   import adaptationLayer
@@ -59,6 +60,15 @@ class KFEContactListWidget(adaptationLayer.KFEAbstractContactListWidget, QTreeVi
         self.setHeaderHidden(True)
         self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.setSortingEnabled(True)
+        self.viewport().setStyleSheet( "QWidget{                    \
+                    background-attachment: fixed;           \
+                    background-origin: content;             \
+                    background-position: bottom left;       \
+                    background-repeat: no-repeat;           \
+                    background-clip: content;               \
+                    background-color: rgb(178, 216, 255);   \
+                    background-image: url(amsn2/ui/front_ends/kde4/background.png);}" )
+        #self.verticalScrollBar().setStyleSheet("QScrollBar:vertical{}")
         #self.setIndentation(0)
         QObject.connect(self, SIGNAL("doubleClicked(const QModelIndex&)"), self.onItemDoubleClicked)
 
@@ -82,7 +92,7 @@ class KFEContactListWidget(adaptationLayer.KFEAbstractContactListWidget, QTreeVi
     # -------------------- QT_SLOTS
 
     def onItemDoubleClicked(self, item):
-        self.emit(SIGNAL("newConversationRequested(char*)"), self.cl_model.data(item, Qt.UserRole))
+        self.emit(SIGNAL("newConversationRequested(char*)"), str(self.cl_model.data(item, KFERole.UidRole).toString()))
 
 
 

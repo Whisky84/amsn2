@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from amsn2.ui.front_ends.kde4.adaptationLayer import KFELog
+from amsn2.ui.front_ends.kde4.adaptationLayer import    KFELog,         \
+                                                        KFEThemeManager
 
-from widgets import KFETextEditMod
+from widgets import KFEDisplayPic,  \
+                    KFETextEditMod
 from amsn2.ui.front_ends.kde4 import adaptationLayer
 
 from amsn2.views    import *
 
 from PyKDE4.kdeui   import *
+from PyKDE4.kdecore import *
 from PyQt4.QtGui    import *
 from PyQt4.QtCore   import *
 
@@ -18,7 +21,8 @@ class KFEChatWindow (adaptationLayer.KFEAbstractChatWindow, KMainWindow):
     def constructor(self, parent=None):
         KFELog().l("KFEChatWindow.constructor()")
         KMainWindow.__init__(self, parent)
-
+        self.setObjectName("chatwindow#")
+        
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
         self.lay = QVBoxLayout()
@@ -52,48 +56,70 @@ class KFEChatWindow (adaptationLayer.KFEAbstractChatWindow, KMainWindow):
 class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
     #TODO: We'll probably need a SIGNAL from the contact list model, to update the contact info here.
     def constructor(self, contacts_uid, parent=None):
-        KFELog().l("KFEChatWidget.constructor()", False, 1)
+        #KFELog().l("KFEChatWidget.constructor()", False, 1)
         self.statusBar = None
+        themeManager = KFEThemeManager()
         QWidget.__init__(self, parent)
 
 
         label = QLabel(contacts_uid[0])
-
-        topWidget = QWidget()
-        topLay = QHBoxLayout()
-        hisPicture = QLabel()
+        # TOP LEFT
+        topLeftWidget = QWidget()
+        topLeftLay = QHBoxLayout()
         self.chatText = QString("<i>New Chat</i><br>")
         self.chatView = KTextBrowser(None, True)
         self.chatView.setText(self.chatText)
         self.chatView.setText(self.chatText)
-        topLay.addWidget(hisPicture)
-        topLay.addWidget(self.chatView)
-        topWidget.setLayout(topLay)
+        topLeftLay.addWidget(self.chatView)
+        topLeftWidget.setLayout(topLeftLay)
 
-        bottomWidget = QWidget()
-        bottomLay = QHBoxLayout()
-        myPicture = QLabel()
-        self.textEdit = KFETextEditMod()
-        #self.textEdit.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+        # BOTTOM LEFT
+        bottomLeftWidget = QWidget()
+        bottomLeftLay = QVBoxLayout()
+        toolbar = KToolBar(self)
+        toolbar.addAction(KIcon(QIcon(themeManager.pathOf("button_smile"))), "Add Smiley")
+        toolbar.addAction(KIcon(QIcon(themeManager.pathOf("button_nudge"))), "Send Nudge")
+        toolbar.addSeparator()
+        toolbar.addAction(KIcon("preferences-desktop-fonts"), "Change Font")
+        #toolbar.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        #
+        textEditLay = QHBoxLayout()
+        self.textEditWidget = KFETextEditMod()
         self.textEditBtn = KPushButton("Send")
-        bottomLay.addWidget(myPicture)
-        bottomLay.addWidget(self.textEdit)
-        bottomLay.addWidget(self.textEditBtn)
-        bottomWidget.setLayout(bottomLay)
+        textEditLay.addWidget(self.textEditWidget)
+        textEditLay.addWidget(self.textEditBtn)
+        #
+        bottomLeftLay.addWidget(toolbar)
+        bottomLeftLay.addLayout(textEditLay)
+        bottomLeftWidget.setLayout(bottomLeftLay)
+        
+        # LEFT (TOP & BOTTOM)
+        leftWidget = QSplitter(Qt.Vertical)
+        leftWidget.addWidget(topLeftWidget)
+        leftWidget.addWidget(bottomLeftWidget)
 
-        splitter = QSplitter(Qt.Vertical)
-        splitter.addWidget(topWidget)
-        splitter.addWidget(bottomWidget)
+        leftLay = QVBoxLayout()
+        leftLay.addWidget(label)
+        leftLay.addWidget(leftWidget)
 
-        lay = QVBoxLayout()
-        lay.addWidget(label)
-        lay.addWidget(splitter)
+        leftWidget.setCollapsible (0, False)
+        leftWidget.setCollapsible (1, False)
+        _,splitterPos = leftWidget.getRange(1)
+        leftWidget.moveSplitter(splitterPos,1)
+        
+        # RIGHT
+        rightLay = QVBoxLayout()
+        self.hisPicture = KFEDisplayPic()
+        self.myPicture = KFEDisplayPic()
+        rightLay.addWidget(self.hisPicture)
+        rightLay.addStretch()
+        rightLay.addWidget(self.myPicture)
+        
+        # LEFT & RIGHT
+        lay = QHBoxLayout()
+        lay.addLayout(leftLay)
+        lay.addLayout(rightLay)
         self.setLayout(lay)
-
-        splitter.setCollapsible (0, False)
-        splitter.setCollapsible (1, False)
-        _,splitterPos = splitter.getRange(1)
-        splitter.moveSplitter(splitterPos,1)
 
         #model = self.parent()._core._ui_manager._contactlist.get_contactlist_widget().getModel()
         #index = model.getIndexByUid(contacts_uid[0])
@@ -101,7 +127,7 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         #    hisPicture.setPixmap(model.data(QModelIndex(index,0,Qt.DecorationRole)))
 
         QObject.connect(self.textEditBtn, SIGNAL("clicked()"), self.onSendMessage)
-        QObject.connect(self.textEdit, SIGNAL("returnPressed()"), self.onSendMessage)
+        QObject.connect(self.textEditWidget, SIGNAL("returnPressed()"), self.onSendMessage)
         sys.setdefaultencoding("utf8")
 
 
@@ -147,13 +173,13 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
     # -------------------- QT_SLOTS
 
     def onSendMessage(self):
-        messageString = str(self.textEdit.toPlainText())
+        messageString = str(self.textEditWidget.toPlainText())
         if len(messageString) == 0:
             return
         messageStringView = StringView()
         messageStringView.append_text(messageString)
 
-        self.textEdit.setText("")
+        self.textEditWidget.setText("")
         self.sendMessage(messageStringView)
 
     def appendToChat(self, htmlString):
@@ -172,13 +198,16 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
     def setStatusBar(self, statusBar):
         self.statusBar = statusBar
         
+        
+class emoticonButtonAction (KToolBarPopupAction):		
+    def __init__(self, icon, text, parent):
+        KToolBarPopupAction.__init__(self, icon, text, parent)
+    def createWidget(self, parent):
+        w = KToolBarPopupAction.createWidget(self, parent)
+        l = QHBoxLayout()
+        l.addWidget(QLabel("Ciao"))
+        w.setLayout(l)
+        return w
+        
 
 
-if __name__ == "__main__":
-    about = KAboutData("a","b",ki18n("c"), "d")
-    KCmdLineArgs.init(sys.argv, about)
-    kapp = KApplication()
-    w = KFEChatWindow(None)
-    w.add_chat_widget(KFEChatWidget(None,w,"3"))
-    w.show()
-    kapp.exec_()

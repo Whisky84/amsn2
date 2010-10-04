@@ -59,8 +59,8 @@ if __name__ == "__main__":
     
 class KFELogWidget(QWidget):
     def __init__(self):
-        mainWin = aMSNCore().get_main_window()
-        QWidget.__init__(self,  mainWin)
+        #mainWin = aMSNCore().get_main_window()
+        QWidget.__init__(self)#,  mainWin)
         lay = QVBoxLayout()
         self.textEdit = KTextEdit()
         self.text = QString()

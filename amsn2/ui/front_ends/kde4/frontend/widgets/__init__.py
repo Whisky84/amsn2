@@ -4,4 +4,5 @@ from kfeDisplayPic      import  KFEDisplayPic
 from kfeNickEdit        import  KFENickEdit
 from kfePresenceCombo   import  KFEPresenceCombo
 from kfeTextEditMod     import  KFETextEditMod
+from kfeEmotconPopup    import  KFEEmoticonPopup
 
