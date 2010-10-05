@@ -3,7 +3,8 @@
 from amsn2.ui.front_ends.kde4.adaptationLayer import    KFELog,         \
                                                         KFEThemeManager
 
-from widgets import KFEDisplayPic,  \
+from widgets import KFEDisplayPic,      \
+                    KFEEmoticonPopup,   \
                     KFETextEditMod
 from amsn2.ui.front_ends.kde4 import adaptationLayer
 
@@ -77,11 +78,13 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         bottomLeftWidget = QWidget()
         bottomLeftLay = QVBoxLayout()
         toolbar = KToolBar(self)
-        toolbar.addAction(KIcon(QIcon(themeManager.pathOf("button_smile"))), "Add Smiley")
+        self.smileyChooser = KFEEmoticonPopup()
+        a = toolbar.addAction(KIcon(QIcon(themeManager.pathOf("button_smile"))), "Add Smiley")
+        a.triggered.connect(self.onShowEmoticonChooser)
         toolbar.addAction(KIcon(QIcon(themeManager.pathOf("button_nudge"))), "Send Nudge")
         toolbar.addSeparator()
         toolbar.addAction(KIcon("preferences-desktop-fonts"), "Change Font")
-        #toolbar.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        toolbar.setToolButtonStyle(Qt.ToolButtonIconOnly)
         #
         textEditLay = QHBoxLayout()
         self.textEditWidget = KFETextEditMod()
@@ -128,9 +131,18 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
 
         QObject.connect(self.textEditBtn, SIGNAL("clicked()"), self.onSendMessage)
         QObject.connect(self.textEditWidget, SIGNAL("returnPressed()"), self.onSendMessage)
+        self.smileyChooser.emoticonSelected.connect(self.onEmoticonSelected)
         sys.setdefaultencoding("utf8")
+        
+    def onShowEmoticonChooser(self):
+        print "onShowEmoticonChooser"
+        self.smileyChooser.show()
+        
 
-
+    def onEmoticonSelected(self, shortcut):
+        # TODO: handle cursor position!
+        self.textEditWidget.setText(self.textEditWidget.toPlainText() + shortcut)
+    
     def onMessageReceived(self, messageview, formatting):
         """ Called for incoming and outgoing messages
             message: a MessageView of the message"""
