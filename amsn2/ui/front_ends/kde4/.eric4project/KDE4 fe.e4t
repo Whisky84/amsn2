@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Tasks SYSTEM "Tasks-4.2.dtd">
 <!-- eric4 tasks file for project KDE4 fe -->
-<!-- Saved: 2010-10-02, 19:34:29 -->
+<!-- Saved: 2010-10-06, 01:06:20 -->
 <Tasks version="4.2">
   <Task priority="1" completed="False" bugfix="False">
     <Summary>TODO: Consider reimplementing KFEAccountPage as a Qt state machine</Summary>
@@ -19,15 +19,6 @@
     <Resource>
       <Filename>frontend/mainWindowPages/kfeAccountPage.py</Filename>
       <Linenumber>48</Linenumber>
-    </Resource>
-  </Task>
-  <Task priority="1" completed="False" bugfix="False">
-    <Summary>TODO: set the Icon.</Summary>
-    <Description></Description>
-    <Created>2010-10-01, 02:45:20</Created>
-    <Resource>
-      <Filename>frontend/models/contactListModel.py</Filename>
-      <Linenumber>60</Linenumber>
     </Resource>
   </Task>
   <Task priority="1" completed="False" bugfix="False">
@@ -49,12 +40,39 @@
     </Resource>
   </Task>
   <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: set the Icon.</Summary>
+    <Description></Description>
+    <Created>2010-10-05, 11:17:49</Created>
+    <Resource>
+      <Filename>frontend/models/contactListModel.py</Filename>
+      <Linenumber>60</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
     <Summary>TODO: We'll probably need a SIGNAL from the contact list model, to update the contact info here.</Summary>
     <Description></Description>
-    <Created>2010-10-02, 19:09:18</Created>
+    <Created>2010-10-05, 12:02:06</Created>
     <Resource>
       <Filename>frontend/kfeChat.py</Filename>
-      <Linenumber>55</Linenumber>
+      <Linenumber>58</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="False">
+    <Summary>TODO: handle cursor position!</Summary>
+    <Description></Description>
+    <Created>2010-10-05, 12:02:06</Created>
+    <Resource>
+      <Filename>frontend/kfeChat.py</Filename>
+      <Linenumber>143</Linenumber>
+    </Resource>
+  </Task>
+  <Task priority="1" completed="False" bugfix="True">
+    <Summary>FIXME: Smiley manager's implementation will likely change heavily</Summary>
+    <Description></Description>
+    <Created>2010-10-06, 01:06:20</Created>
+    <Resource>
+      <Filename>frontend/widgets/kfeEmoticonPopup.py</Filename>
+      <Linenumber>19</Linenumber>
     </Resource>
   </Task>
 </Tasks>

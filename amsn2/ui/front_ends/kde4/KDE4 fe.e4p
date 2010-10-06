@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project KDE4 fe -->
-<!-- Saved: 2010-10-04, 21:21:02 -->
+<!-- Saved: 2010-10-05, 12:01:58 -->
 <!-- Copyright (C) 2010 ,  -->
 <Project version="4.6">
   <Language>en</Language>
@@ -12,7 +12,6 @@
   <Author></Author>
   <Email></Email>
   <Sources>
-    <Source>/home/rayleigh/src/aMSN2/amsn2.py</Source>
     <Source>frontend/kfeMainWindow.py</Source>
     <Source>frontend/__init__.py</Source>
     <Source>frontend/kfeContactList.py</Source>
@@ -32,35 +31,6 @@
     <Source>frontend/kfeMainLoop.py</Source>
     <Source>frontend/kfeChat.py</Source>
     <Source>__init__.py</Source>
-    <Source>oldStuff/aMSNchat_window/__init__.py</Source>
-    <Source>oldStuff/aMSNchat_window/aMSNchat_window.py</Source>
-    <Source>oldStuff/kfeWindow2.py</Source>
-    <Source>oldStuff/kfeAbstractWindow.py</Source>
-    <Source>oldStuff/aMSNlogin_window/aMSNlogin_window.py</Source>
-    <Source>oldStuff/aMSNlogin_window/__init__.py</Source>
-    <Source>oldStuff/aMSNlogin_window/kloginpage.py</Source>
-    <Source>oldStuff/aMSNlogin_window/ksignininpage.py</Source>
-    <Source>oldStuff/widgets/__init__.py</Source>
-    <Source>oldStuff/aMSNskins/__init__.py</Source>
-    <Source>oldStuff/aMSNskins/aMSNskins.py</Source>
-    <Source>oldStuff/aMSNwindow/aMSNwindow.py</Source>
-    <Source>oldStuff/aMSNwindow/__init__.py</Source>
-    <Source>oldStuff/aMSNchoosers/__init__.py</Source>
-    <Source>oldStuff/aMSNchoosers/aMSNchoosers.py</Source>
-    <Source>oldStuff/aMSNsplash/aMSNsplash.py</Source>
-    <Source>oldStuff/aMSNsplash/__init__.py</Source>
-    <Source>oldStuff/models/contactlistmodel2.py</Source>
-    <Source>oldStuff/models/__init__.py</Source>
-    <Source>oldStuff/models/contactlistmodel.py</Source>
-    <Source>oldStuff/aMSNmain_window/__init__.py</Source>
-    <Source>oldStuff/aMSNmain_window/aMSNmain_window.py</Source>
-    <Source>oldStuff/aMSNmain_loop/aMSNmain_loop.py</Source>
-    <Source>oldStuff/aMSNmain_loop/__init__.py</Source>
-    <Source>oldStuff/aMSNutility/aMSNutility.py</Source>
-    <Source>oldStuff/aMSNutility/__init__.py</Source>
-    <Source>oldStuff/kfeWindow.py</Source>
-    <Source>oldStuff/aMSNcontact_list/aMSNcontact_list.py</Source>
-    <Source>oldStuff/aMSNcontact_list/__init__.py</Source>
     <Source>adaptationLayer/kfeViews/__init__.py</Source>
     <Source>adaptationLayer/kfeViews/kfeAccount.py</Source>
     <Source>adaptationLayer/kfeAbstractUtility.py</Source>
@@ -80,9 +50,9 @@
     <Source>kde4frontend.py</Source>
     <Source>frontend/widgets/kfeDisplayPic.py</Source>
     <Source>tests/__init__.py</Source>
+    <Source>frontend/widgets/kfeEmoticonPopup.py</Source>
   </Sources>
   <Forms>
-    <Form>oldStuff/models/blah.ui</Form>
   </Forms>
   <Translations>
   </Translations>
