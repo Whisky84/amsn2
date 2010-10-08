@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project KDE4 fe -->
-<!-- Saved: 2010-10-05, 12:01:58 -->
+<!-- Saved: 2010-10-07, 22:00:44 -->
 <!-- Copyright (C) 2010 ,  -->
 <Project version="4.6">
   <Language>en</Language>
@@ -16,7 +16,6 @@
     <Source>frontend/__init__.py</Source>
     <Source>frontend/kfeContactList.py</Source>
     <Source>frontend/kfeUtility.py</Source>
-    <Source>frontend/widgets/kfeTextEditMod.py</Source>
     <Source>frontend/widgets/__init__.py</Source>
     <Source>frontend/widgets/kfeNickEdit.py</Source>
     <Source>frontend/widgets/kfePresenceCombo.py</Source>
@@ -51,6 +50,9 @@
     <Source>frontend/widgets/kfeDisplayPic.py</Source>
     <Source>tests/__init__.py</Source>
     <Source>frontend/widgets/kfeEmoticonPopup.py</Source>
+    <Source>tests/kfeChatTest.py</Source>
+    <Source>frontend/widgets/kfeChatTextEdit.py</Source>
+    <Source>tests/kfeChatTextEditTest.py</Source>
   </Sources>
   <Forms>
   </Forms>

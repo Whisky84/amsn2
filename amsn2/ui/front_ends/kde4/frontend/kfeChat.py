@@ -5,7 +5,7 @@ from amsn2.ui.front_ends.kde4.adaptationLayer import    KFELog,         \
 
 from widgets import KFEDisplayPic,      \
                     KFEEmoticonPopup,   \
-                    KFETextEditMod
+                    KFEChatTextEditStacked
 from amsn2.ui.front_ends.kde4 import adaptationLayer
 
 from amsn2.views    import *
@@ -87,9 +87,10 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         toolbar.setToolButtonStyle(Qt.ToolButtonIconOnly)
         #
         textEditLay = QHBoxLayout()
-        self.textEditWidget = KFETextEditMod()
+        textEditStackedWidget = KFEChatTextEditStacked()
+        self.textEditWidget = textEditStackedWidget.getWidget()
         self.textEditBtn = KPushButton("Send")
-        textEditLay.addWidget(self.textEditWidget)
+        textEditLay.addWidget(textEditStackedWidget)
         textEditLay.addWidget(self.textEditBtn)
         #
         bottomLeftLay.addWidget(toolbar)
@@ -140,9 +141,10 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         
 
     def onEmoticonSelected(self, shortcut):
-        # TODO: handle cursor position!
-        self.textEditWidget.setText(self.textEditWidget.toPlainText() + shortcut)
-    
+        # handles cursor position
+        self.textEditWidget.insertTextAfterCursor(shortcut)
+        
+        
     def onMessageReceived(self, messageview, formatting):
         """ Called for incoming and outgoing messages
             message: a MessageView of the message"""
@@ -191,7 +193,7 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         messageStringView = StringView()
         messageStringView.append_text(messageString)
 
-        self.textEditWidget.setText("")
+        self.textEditWidget.setPlainText("")
         self.sendMessage(messageStringView)
 
     def appendToChat(self, htmlString):
