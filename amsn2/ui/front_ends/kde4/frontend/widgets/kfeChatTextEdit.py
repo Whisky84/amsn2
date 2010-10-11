@@ -59,6 +59,19 @@ class KFEChatTextEdit (KTextEdit):
         elif keyEvent.key() == Qt.Key_Backspace:
             self.assumeGood = True
             KTextEdit.keyPressEvent(self.child, keyEvent)
+        elif keyEvent.key() == Qt.Key_Space:
+            fakeEvent = QKeyEvent(QEvent.KeyPress, Qt.Key_Ampersand, Qt.NoModifier)
+            KTextEdit.keyPressEvent(self.child, fakeEvent)
+            fakeEvent = QKeyEvent(QEvent.KeyPress, Qt.Key_N, Qt.NoModifier)
+            KTextEdit.keyPressEvent(self.child, fakeEvent)
+            fakeEvent = QKeyEvent(QEvent.KeyPress, Qt.Key_B, Qt.NoModifier)
+            KTextEdit.keyPressEvent(self.child, fakeEvent)
+            fakeEvent = QKeyEvent(QEvent.KeyPress, Qt.Key_S, Qt.NoModifier)
+            KTextEdit.keyPressEvent(self.child, fakeEvent)
+            fakeEvent = QKeyEvent(QEvent.KeyPress, Qt.Key_P, Qt.NoModifier)
+            KTextEdit.keyPressEvent(self.child, fakeEvent)
+            fakeEvent = QKeyEvent(QEvent.KeyPress, Qt.Key_Colon, Qt.NoModifier)
+            KTextEdit.keyPressEvent(self.child, fakeEvent)
         else:
             self.assumeGood = False
             KTextEdit.keyPressEvent(self.child, keyEvent)

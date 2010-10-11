@@ -5,7 +5,7 @@ from amsn2.ui.front_ends.kde4.adaptationLayer import    KFELog,         \
 
 from widgets import KFEDisplayPic,      \
                     KFEEmoticonPopup,   \
-                    KFEChatTextEditStacked
+                    KFEChatTextEdit2
 from amsn2.ui.front_ends.kde4 import adaptationLayer
 
 from amsn2.views    import *
@@ -87,10 +87,9 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         toolbar.setToolButtonStyle(Qt.ToolButtonIconOnly)
         #
         textEditLay = QHBoxLayout()
-        textEditStackedWidget = KFEChatTextEditStacked()
-        self.textEditWidget = textEditStackedWidget.getWidget()
+        self.textEditWidget = KFEChatTextEdit2()
         self.textEditBtn = KPushButton("Send")
-        textEditLay.addWidget(textEditStackedWidget)
+        textEditLay.addWidget(self.textEditWidget)
         textEditLay.addWidget(self.textEditBtn)
         #
         bottomLeftLay.addWidget(toolbar)
