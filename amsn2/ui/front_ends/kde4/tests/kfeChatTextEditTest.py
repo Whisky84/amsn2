@@ -22,6 +22,8 @@ if __name__ == "__main__":
     def testStuff():
         #KFEThemeManager.setManager(aMSNThemeManager(None))
         core = aMSNCore(OptionsStub())
+        print "Theme Manager: ",
+        print core._theme_manager
         KFEThemeManager.setManager(core._theme_manager)
         pass
     testStuff()

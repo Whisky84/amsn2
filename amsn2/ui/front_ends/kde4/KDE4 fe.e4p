@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project KDE4 fe -->
-<!-- Saved: 2010-10-10, 16:50:41 -->
+<!-- Saved: 2010-10-12, 17:45:10 -->
 <!-- Copyright (C) 2010 ,  -->
 <Project version="4.6">
   <Language>en</Language>
@@ -55,6 +55,8 @@
     <Source>tests/kfeChatTextEditTest.py</Source>
     <Source>frontend/widgets/kfeChatTextEdit2.py</Source>
     <Source>frontend/widgets/kfeChatTextEdit3.py</Source>
+    <Source>/home/rayleigh/src/aMSN2/amsn2/__init__.py</Source>
+    <Source>tests/myHTMLParserTest.py</Source>
   </Sources>
   <Forms>
   </Forms>

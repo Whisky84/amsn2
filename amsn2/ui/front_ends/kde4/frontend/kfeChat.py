@@ -5,8 +5,10 @@ from amsn2.ui.front_ends.kde4.adaptationLayer import    KFELog,         \
 
 from widgets import KFEDisplayPic,      \
                     KFEEmoticonPopup,   \
-                    KFEChatTextEdit2
+                    KFEChatTextEdit3
 from amsn2.ui.front_ends.kde4 import adaptationLayer
+
+from amsn2.core.smiley_manager import aMSNSmileyManager
 
 from amsn2.views    import *
 
@@ -23,7 +25,7 @@ class KFEChatWindow (adaptationLayer.KFEAbstractChatWindow, KMainWindow):
         KFELog().l("KFEChatWindow.constructor()")
         KMainWindow.__init__(self, parent)
         self.setObjectName("chatwindow#")
-        
+
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
         self.lay = QVBoxLayout()
@@ -44,7 +46,7 @@ class KFEChatWindow (adaptationLayer.KFEAbstractChatWindow, KMainWindow):
 
     def show(self):
         KMainWindow.show(self)
-        
+
     def setMenu(self, menuBar):
         self.setMenuBar(menuBar)
 
@@ -83,11 +85,15 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         a.triggered.connect(self.onShowEmoticonChooser)
         toolbar.addAction(KIcon(QIcon(themeManager.pathOf("button_nudge"))), "Send Nudge")
         toolbar.addSeparator()
-        toolbar.addAction(KIcon("preferences-desktop-fonts"), "Change Font")
+        a = toolbar.addAction(KIcon("preferences-desktop-font"), "Change Font")
+        b = toolbar.addAction(KIcon("preferences-desktop-fonts"), "Change Color")
         toolbar.setToolButtonStyle(Qt.ToolButtonIconOnly)
         #
         textEditLay = QHBoxLayout()
-        self.textEditWidget = KFEChatTextEdit2()
+        self.textEditWidget = KFEChatTextEdit3()
+        self.textEditWidget.setSmileyDict(aMSNSmileyManager(None).default_smileys_shortcuts)
+        a.triggered.connect(self.textEditWidget.showFontStyleSelector)
+        b.triggered.connect(self.textEditWidget.showFontColorSelector)
         self.textEditBtn = KPushButton("Send")
         textEditLay.addWidget(self.textEditWidget)
         textEditLay.addWidget(self.textEditBtn)
@@ -95,7 +101,7 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         bottomLeftLay.addWidget(toolbar)
         bottomLeftLay.addLayout(textEditLay)
         bottomLeftWidget.setLayout(bottomLeftLay)
-        
+
         # LEFT (TOP & BOTTOM)
         leftWidget = QSplitter(Qt.Vertical)
         leftWidget.addWidget(topLeftWidget)
@@ -109,7 +115,7 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         leftWidget.setCollapsible (1, False)
         _,splitterPos = leftWidget.getRange(1)
         leftWidget.moveSplitter(splitterPos,1)
-        
+
         # RIGHT
         rightLay = QVBoxLayout()
         self.hisPicture = KFEDisplayPic()
@@ -117,7 +123,7 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         rightLay.addWidget(self.hisPicture)
         rightLay.addStretch()
         rightLay.addWidget(self.myPicture)
-        
+
         # LEFT & RIGHT
         lay = QHBoxLayout()
         lay.addLayout(leftLay)
@@ -133,17 +139,17 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         QObject.connect(self.textEditWidget, SIGNAL("returnPressed()"), self.onSendMessage)
         self.smileyChooser.emoticonSelected.connect(self.onEmoticonSelected)
         sys.setdefaultencoding("utf8")
-        
+
     def onShowEmoticonChooser(self):
         print "onShowEmoticonChooser"
         self.smileyChooser.show()
-        
+
 
     def onEmoticonSelected(self, shortcut):
         # handles cursor position
         self.textEditWidget.insertTextAfterCursor(shortcut)
-        
-        
+
+
     def onMessageReceived(self, messageview, formatting):
         """ Called for incoming and outgoing messages
             message: a MessageView of the message"""
@@ -164,7 +170,7 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         tempStr.append("<br>")
 
         self.appendToChat(tempStr)
-        
+
 
     def onUserJoined(self, nickname):
         KFELog().l("KFEChatWidget.onUserJoined()")
@@ -192,7 +198,7 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
         messageStringView = StringView()
         messageStringView.append_text(messageString)
 
-        self.textEditWidget.setPlainText("")
+        self.textEditWidget.clear()
         self.sendMessage(messageStringView)
 
     def appendToChat(self, htmlString):
@@ -201,7 +207,7 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
             atBottom = True
         else:
             atBottom = False
-            
+
         self.chatText.append(htmlString)
         self.chatView.setText(self.chatText)
 
@@ -210,9 +216,9 @@ class KFEChatWidget (adaptationLayer.KFEAbstractChatWidget, QWidget):
 
     def setStatusBar(self, statusBar):
         self.statusBar = statusBar
-        
-        
-class emoticonButtonAction (KToolBarPopupAction):		
+
+
+class emoticonButtonAction (KToolBarPopupAction):
     def __init__(self, icon, text, parent):
         KToolBarPopupAction.__init__(self, icon, text, parent)
     def createWidget(self, parent):
@@ -221,6 +227,6 @@ class emoticonButtonAction (KToolBarPopupAction):
         l.addWidget(QLabel("Ciao"))
         w.setLayout(l)
         return w
-        
+
 
 
